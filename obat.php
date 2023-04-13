@@ -1,5 +1,5 @@
 <?php
-$halaman = "Kelola Pengguna";
+$halaman = "Data Obat";
 include "header.php";
 if(isset($_POST['tambah'])){
     unset($_POST['tambah']);

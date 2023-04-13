@@ -1,14 +1,11 @@
 <?php
 include "function.php";
-if(isset($_SESSION['user'])){
+if (isset($_SESSION['user'])) {
     header('location: index.php', true, 301);
     exit();
 }
-if(isset($_POST['login'])){
-    if(auth('login',$_POST)){
-        header('location: index.php', true, 301);
-        exit();
-    }
+if (isset($_POST['login'])) {
+    auth('login', $_POST);
     header('Refresh: 0', true, 301);
     exit();
 }
@@ -22,8 +19,7 @@ if(isset($_POST['login'])){
     <title>Login - Klinik IMK</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- SweetAlert2 -->
@@ -87,21 +83,21 @@ if(isset($_POST['login'])){
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.min.js"></script>
     <script>
-    $(document).ready(() => {
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-        <?php if(isset($_SESSION['smess'])) { ?>
-        Toast.fire({
-            icon: "<?= $_SESSION['smess']['alert'] ?>",
-            title: "<?= $_SESSION['smess']['msg'] ?>",
+        $(document).ready(() => {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+            <?php if (isset($_SESSION['smess'])) { ?>
+                Toast.fire({
+                    icon: "<?= $_SESSION['smess']['alert'] ?>",
+                    title: "<?= $_SESSION['smess']['msg'] ?>",
+                })
+            <?php } ?>
         })
-        <?php } ?>
-    })
     </script>
 </body>
 
