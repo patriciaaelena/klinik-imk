@@ -1,5 +1,5 @@
 <?php
-$halaman = "Data Obat";
+$halaman = "Obat Keluar";
 include "header.php";
 if(isset($_POST['tambah'])){
     unset($_POST['tambah']);
@@ -27,7 +27,7 @@ $obat = obat('','');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Kelola Data Obat</h1>
+                    <h1>Kelola Data Obat Keluar</h1>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@ $obat = obat('','');
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Daftar Obat</h3>
+                            <h3 class="card-title">Daftar Obat Keluar</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-toggle="modal"
@@ -97,7 +97,7 @@ $obat = obat('','');
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Obat</h4>
+                <h4 class="modal-title">Tambah Data Obat Keluar</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -105,20 +105,18 @@ $obat = obat('','');
             <form method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label style="font-weight: 400;" for="nama-tambah">Nama Obat</label>
-                        <input type="text" class="form-control" id="nama-tambah" name="nama_obat" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 400;" for="jenis">Jenis</label>
-                        <select class="form-control" name="jenis" id="jenis" required>
-                            <option value="Obat Bebas">Obat Bebas</option>
-                            <option value="Obat Bebas Terbatas">Obat Bebas Terbatas</option>
-                            <option value="Obat Keras">Obat Keras</option>
+                        <label style="font-weight: 400;" for="id_obat_masuk">Nama Obat</label>
+                        <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" required>
+                            <?php foreach ($obat as $val) { ?>
+                                <option value="<?= $val['id_obat'] ?>"><?= $val['id_obat'] ?> - <?= $val['nama_obat'] ?></option>
+                            <?php } ?>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label style="font-weight: 400;" for="harga">Harga</label>
-                        <input type="number" class="form-control" id="harga" name="harga" required>
+                    <div id="obat1">
+                        <div class="form-group">
+                            <label style="font-weight: 400;" for="jumlah">Jumlah</label>
+                            <input type="number" class="form-control" id="jumlah" name="jumlah" disabled required>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

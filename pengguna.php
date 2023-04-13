@@ -67,13 +67,13 @@ $pengguna = admin('','');
                                         <td><?= $value['nama_adm'] ?></td>
                                         <td><?= $value['hp_adm'] ?></td>
                                         <td>
-                                            <button class="btn btn-primary" data-toggle="modal"
+                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                 data-target="#modal-default2"
                                                 onclick="dataModalUbah(<?= $value['id_adm'] ?>,'<?= $value['username'] ?>','<?= $value['nama_adm'] ?>','<?= $value['hp_adm'] ?>')"><i
                                                     class="fas fa-edit"></i></button>
                                             <form method="post" style="display: inline;">
                                                 <input type="hidden" name="id_adm" value="<?= $value['id_adm'] ?>">
-                                                <button type="submit" class="btn btn-danger" name="hapus" onclick="return confirm('Yakin menghapus data ini?')"><i
+                                                <button type="submit" class="btn btn-sm btn-danger" name="hapus" onclick="return confirm('Yakin menghapus data ini?')"><i
                                                         class="fas fa-trash"></i></button>
                                             </form>
                                         </td>

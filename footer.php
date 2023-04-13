@@ -1,5 +1,5 @@
 <?php
-if(!isset($halaman)){
+if (!isset($halaman)) {
     header("Location: 404.php");
     exit();
 }
@@ -28,27 +28,30 @@ if(!isset($halaman)){
 <script src="plugins/pdfmake/vfs_fonts.js"></script>
 <script src="dist/js/adminlte.min.js"></script>
 <script>
-$(document).ready(() => {
-    $("#tabel1").DataTable({
-        "responsive": true,
-        "lengthChange": false,
-        "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-    });
-    <?php if(isset($_SESSION['smess'])) { ?>
-    Toast.fire({
-        icon: "<?= $_SESSION['smess']['alert'] ?>",
-        title: "<?= $_SESSION['smess']['msg'] ?>",
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
     })
-    <?php } ?>
-})
+    $(document).ready(() => {
+        $("#tabel1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+        <?php if (isset($_SESSION['smess'])) { ?>
+            Toast.fire({
+                icon: "<?= $_SESSION['smess']['alert'] ?>",
+                title: "<?= $_SESSION['smess']['msg'] ?>",
+            })
+        <?php } ?>
+    })
 </script>
 </body>
 
