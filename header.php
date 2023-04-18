@@ -37,6 +37,9 @@ if(isset($_POST['logout'])){
 
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <script src="plugins/jquery/jquery.min.js"></script>
+    <script>
+        let data = [];
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-boxed">

@@ -23,7 +23,8 @@ if (isset($_POST['hapus'])) {
 }
 if (isset($_POST['kedaluwarsa'])) {
     unset($_POST['kedaluwarsa']);
-    obatMasuk('kedaluwarsa', $_POST);
+    $_POST['id_adm'] = $user['id'];
+    obatKeluar('kedaluwarsa', $_POST);
     header('Refresh: 0', true, 301);
     exit();
 }
@@ -98,8 +99,9 @@ $obatMasuk = obatMasuk('', '');
                                                     <form method="post" style="display: inline;">
                                                         <input type="hidden" name="id_obat_masuk" value="<?= $value['id_obat_masuk'] ?>">
                                                         <input type="hidden" name="id_obat" value="<?= $value['id_obat'] ?>">
-                                                        <input type="hidden" name="tersedia" value="<?= $value['tersedia'] ?>">
-                                                        <button type="submit" class="btn btn-sm btn-warning" name="kedaluwarsa" onclick="return confirm('Obat ini sudah kedaluwarsa?')" data-toggle="tooltip" data-placement="left" title="Ketuk apabila kedaluwarsa"><i class="fas fa-share"></i></button>
+                                                        <input type="hidden" name="jumlah" value="<?= $value['tersedia'] ?>">
+                                                        <input type="hidden" name="tgl_keluar" value="<?= date('Y-m-d') ?>">
+                                                        <button type="submit" class="btn btn-sm btn-warning" name="kedaluwarsa" onclick="return confirm('Obat ini sudah kedaluwarsa?\nAksi tidak bisa dibatalkan.')" data-toggle="tooltip" data-placement="left" title="Ketuk apabila kedaluwarsa"><i class="fas fa-share"></i></button>
                                                     </form>
                                                 <?php } ?>
                                             </td>

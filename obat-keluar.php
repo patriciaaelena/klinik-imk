@@ -1,26 +1,27 @@
 <?php
 $halaman = "Obat Keluar";
 include "header.php";
-if(isset($_POST['tambah'])){
+if (isset($_POST['tambah'])) {
     unset($_POST['tambah']);
     $_POST['id_adm'] = $user['id'];
-    obat('tambah',$_POST);
+    obatKeluar('tambah', $_POST);
     header('Refresh: 0', true, 301);
     exit();
 }
-if(isset($_POST['ubah'])){
+if (isset($_POST['ubah'])) {
     unset($_POST['ubah']);
-    obat('ubah',$_POST);
+    obat('ubah', $_POST);
     header('Refresh: 0', true, 301);
     exit();
 }
-if(isset($_POST['hapus'])){
+if (isset($_POST['hapus'])) {
     unset($_POST['hapus']);
-    obat('hapus',$_POST);
+    obat('hapus', $_POST);
     header('Refresh: 0', true, 301);
     exit();
 }
-$obat = obat('','');
+$obat = obat('', '');
+$obatKeluar = obatKeluar('', '');
 ?>
 <div class="content-wrapper">
     <section class="content-header">
@@ -41,8 +42,7 @@ $obat = obat('','');
                             <h3 class="card-title">Daftar Obat Keluar</h3>
 
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-toggle="modal"
-                                    data-target="#modal-default1">
+                                <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-default1">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
@@ -52,37 +52,29 @@ $obat = obat('','');
                                 <thead>
                                     <tr>
                                         <th>Nama Obat</th>
-                                        <th>Jenis</th>
-                                        <th>Stok</th>
-                                        <th>Harga</th>
+                                        <th>ID Keluar</th>
+                                        <th>Tanggal Keluar</th>
+                                        <th>Jumlah Keluar</th>
                                         <th>Pengelola</th>
-                                        <th>Aksi</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($obat as $value) { ?>
-                                    <tr>
-                                        <td><?= $value['nama_obat'] ?></td>
-                                        <td><?= $value['jenis'] ?></td>
-                                        <td><?= $value['stok'] ?></td>
-                                        <td><?= $value['harga'] ?></td>
-                                        <td><?= $value['nama_adm'] ?></td>
-                                        <td>
-                                            <?php if($user['id']==$value['id_adm']) { ?>
-                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                data-target="#modal-default2"
-                                                onclick="dataModalUbah(<?= $value['id_obat'] ?>,'<?= $value['nama_obat'] ?>','<?= $value['jenis'] ?>','<?= $value['harga'] ?>')"><i
-                                                    class="fas fa-edit"></i></button>
-                                            <form method="post" style="display: inline;">
-                                                <input type="hidden" name="id_obat" value="<?= $value['id_obat'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-danger" name="hapus" onclick="return confirm('Yakin menghapus data ini?')"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </form>
-                                            <?php } else { ?>
-                                            <span class="badge badge-secondary">Tidak tersedia</span>
-                                            <?php } ?>
-                                        </td>
-                                    </tr>
+                                    <?php foreach ($obatKeluar as $value) { ?>
+                                        <tr>
+                                            <td><?= $value['nama_obat'] ?></td>
+                                            <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?>-<?= $value['id_obat_keluar'] ?></td>
+                                            <td><?= $value['tgl_keluar'] ?></td>
+                                            <td><?= $value['jumlah'] ?></td>
+                                            <td><?= $value['nama_adm'] ?></td>
+                                            <td>
+                                                <?php if ($value['kedaluwarsa'] == '0'){ ?>
+                                                    <span class="badge badge-primary">Obat Keluar</span>
+                                                <?php } else{ ?> 
+                                                    <span class="badge badge-danger">Obat Kedaluwarsa</span>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
                                     <?php } ?>
                                 </tbody>
                             </table>
@@ -105,73 +97,62 @@ $obat = obat('','');
             <form method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label style="font-weight: 400;" for="id_obat_masuk">Nama Obat</label>
-                        <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" required>
-                            <?php foreach ($obat as $val) { ?>
-                                <option value="<?= $val['id_obat'] ?>"><?= $val['id_obat'] ?> - <?= $val['nama_obat'] ?></option>
-                            <?php } ?>
+                        <label style="font-weight: 400;" for="id_obat">Nama Obat</label>
+                        <select class="form-control" name="id_obat" id="id_obat" required>
+                            <option value="" selected disabled>-- Pilih Obat --</option>
+                            <?php
+                            foreach ($obat as $val) {
+                                if ((int)$val['stok'] != 0) {
+                            ?>
+                                    <option value="<?= $val['id_obat'] ?>"><?= $val['id_obat'] ?> - <?= $val['nama_obat'] ?></option>
+                            <?php
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                     <div id="obat1">
                         <div class="form-group">
+                            <label style="font-weight: 400;" for="id_obat_masuk">ID Masuk</label>
+                            <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" placeholder="Pilih ID Masuk" required>
+                                <option value="" selected disabled>-- Pilih ID Masuk --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label style="font-weight: 400;" for="jumlah">Jumlah</label>
-                            <input type="number" class="form-control" id="jumlah" name="jumlah" disabled required>
+                            <input type="number" class="form-control" id="jumlah" name="jumlah" value='0' min="1" disabled required>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" name="tambah">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-default2" data-backdrop="static" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ubah Data Obat</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post">
-                <div class="modal-body">
-                    <input type="hidden" name="id_obat" id="id-obat">
                     <div class="form-group">
-                        <label style="font-weight: 400;" for="nama-tambah">Nama Obat</label>
-                        <input type="text" class="form-control" id="nama-ubah" name="nama_obat" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 400;" for="jenis-ubah">Jenis</label>
-                        <select class="form-control" name="jenis" id="jenis-ubah" required>
-                            <option value="Obat Bebas">Obat Bebas</option>
-                            <option value="Obat Bebas Terbatas">Obat Bebas Terbatas</option>
-                            <option value="Obat Keras">Obat Keras</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 400;" for="harga-ubah">Harga</label>
-                        <input type="number" class="form-control" id="harga-ubah" name="harga" required>
+                        <label style="font-weight: 400;" for="tgl_keluar">Tanggal Keluar</label>
+                        <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" max="<?= date("Y-m-d") ?>" required>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" name="ubah">Simpan</button>
+                    <button type="submit" class="btn btn-primary" name="tambah" onclick="return confirm('Apakah data sudah benar?\nAksi tidak dapat dibatalkan.')">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-const dataModalUbah = (id, nama, jenis, harga) => {
-    $("#id-obat").val(id);
-    $("#nama-ubah").val(nama);
-    $("#jenis-ubah").val(jenis);
-    $("#harga-ubah").val(harga);
-}
-$(document).ready(() => {});
+    const dataModalUbah = (id, nama, jenis, harga) => {
+        $("#id-obat").val(id);
+        $("#nama-ubah").val(nama);
+        $("#jenis-ubah").val(jenis);
+        $("#harga-ubah").val(harga);
+    }
+    $(document).ready(() => {
+        $("#id_obat").change(() => {
+            $.post('ajax.php', {
+                component: 'obat1',
+                id: $("#id_obat").val(),
+            }, (data, status) => {
+                $("#obat1").html(data);
+            });
+        });
+    });
 </script>
 <?php
 include "footer.php";

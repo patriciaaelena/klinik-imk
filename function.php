@@ -241,29 +241,8 @@ function obatMasuk($aksi, $data)
                 'msg' => "Data obat tidak berubah!",
             ];
             break;
-        case 'kedaluwarsa':
-            $query = "DELETE FROM obat_masuk WHERE id_obat_masuk='$data[id_obat_masuk]'";
-            var_dump($query);
-            $result = $conn->query($query);
-            if ($conn->affected_rows == 1) {
-                $query = "UPDATE obat SET stok=stok-$data[awal] WHERE id_obat='$data[id_obat]'";
-                $result = $conn->query($query);
-                $_SESSION['smess'] = [
-                    'status' => true,
-                    'alert' => 'success',
-                    'msg' => "Berhasil menghapus data obat masuk!",
-                ];
-                return true;
-            }
-            $_SESSION['smess'] = [
-                'status' => false,
-                'alert' => 'error',
-                'msg' => "Gagal menghapus data obat masuk!",
-            ];
-            break;
         case 'hapus':
             $query = "DELETE FROM obat_masuk WHERE id_obat_masuk='$data[id_obat_masuk]'";
-            var_dump($query);
             $result = $conn->query($query);
             if ($conn->affected_rows == 1) {
                 $query = "UPDATE obat SET stok=stok-$data[awal] WHERE id_obat='$data[id_obat]'";
@@ -282,7 +261,7 @@ function obatMasuk($aksi, $data)
             ];
             break;
         default:
-            $query = "SELECT*FROM (SELECT o.nama_obat,a.nama_adm,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa  FROM obat o JOIN admin a USING(id_adm) JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) GROUP BY id_obat_masuk) tb WHERE kedaluwarsa<>1";
+            $query = "SELECT*FROM (SELECT o.nama_obat,a.nama_adm,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa  FROM obat o JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON om.id_adm=a.id_adm GROUP BY id_obat_masuk) tb WHERE kedaluwarsa<>1";
             $result = $conn->query($query);
             $arrData = [];
             while ($row = $result->fetch_assoc()) {
@@ -292,4 +271,92 @@ function obatMasuk($aksi, $data)
             break;
     }
     return false;
+}
+
+function obatKeluar($aksi, $data)
+{
+    global $conn;
+    switch ($aksi) {
+        case 'tambah':
+            $data['kedaluwarsa'] = '0';
+            $id_obat = $data['id_obat'];
+            unset($data['id_obat']);
+            $query = "INSERT INTO obat_keluar(" . implode(",", array_keys($data)) . ") VALUES('" . implode("','", $data) . "')";
+            $result = $conn->query($query);
+            if ($conn->affected_rows == 1) {
+                $query = "UPDATE obat SET stok=stok-$data[jumlah] WHERE id_obat='$id_obat'";
+                $result = $conn->query($query);
+                $query = "UPDATE obat_masuk SET tersedia=tersedia-$data[jumlah] WHERE id_obat_masuk='$data[id_obat_masuk]'";
+                $result = $conn->query($query);
+                $_SESSION['smess'] = [
+                    'status' => true,
+                    'alert' => 'success',
+                    'msg' => "Berhasil menambah data obat keluar!",
+                ];
+                return true;
+            }
+            $_SESSION['smess'] = [
+                'status' => false,
+                'alert' => 'error',
+                'msg' => "Gagal menambah data obat keluar!",
+            ];
+            break;
+        case 'kedaluwarsa':
+            $data['kedaluwarsa'] = '1';
+            $id_obat = $data['id_obat'];
+            unset($data['id_obat']);
+            $query = "INSERT INTO obat_keluar(" . implode(",", array_keys($data)) . ") VALUES('" . implode("','", $data) . "')";
+            $result = $conn->query($query);
+            if ($conn->affected_rows == 1) {
+                $query = "UPDATE obat SET stok=stok-$data[jumlah] WHERE id_obat='$id_obat'";
+                $result = $conn->query($query);
+                $query = "UPDATE obat_masuk SET tersedia=0 WHERE id_obat='$data[id_obat_masuk]'";
+                $result = $conn->query($query);
+                $_SESSION['smess'] = [
+                    'status' => true,
+                    'alert' => 'success',
+                    'msg' => "Berhasil mengeluarkan obat kedaluwarsa!",
+                ];
+                return true;
+            }
+            $_SESSION['smess'] = [
+                'status' => false,
+                'alert' => 'error',
+                'msg' => "Gagal!",
+            ];
+            break;
+        default:
+            $query = "SELECT o.id_obat,o.nama_obat,a.nama_adm,om.id_obat_masuk,ok.*  FROM obat o JOIN obat_masuk om USING(id_obat) RIGHT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON a.id_adm=ok.id_adm";
+            $result = $conn->query($query);
+            $arrData = [];
+            while ($row = $result->fetch_assoc()) {
+                array_push($arrData, $row);
+            }
+            return $arrData;
+            break;
+    }
+    return false;
+}
+
+function component($type, $data)
+{
+    global $conn;
+    switch ($type) {
+        case 'masuk':
+            $query = "SELECT*FROM (SELECT o.nama_obat,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa, DATEDIFF(tgl_kdwrs, NOW()) selisih  FROM obat o JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) GROUP BY id_obat_masuk) tb WHERE kedaluwarsa<>1 AND tersedia<>0 AND id_obat='$data'";
+            $result = $conn->query($query);
+            $arrData = [];
+            while ($row = $result->fetch_assoc()) {
+                if ((int)$row['selisih'] >= 1) {
+                    array_push($arrData, [
+                        'id_obat_masuk' => $row['id_obat_masuk'],
+                        'tersedia' => $row['tersedia'],
+                        'nama_obat' => $row['nama_obat'],
+                        'selisih' => $row['selisih'],
+                    ]);
+                }
+            }
+            return $arrData;
+            break;
+    }
 }
