@@ -4,7 +4,7 @@ if (!isset($halaman)) {
     exit();
 }
 ?>
-<footer class="main-footer">
+<footer class="main-footer no-print">
     <div class="float-right d-none d-sm-block">
         <b>Version</b> 3.2.0
     </div>
@@ -14,19 +14,6 @@ if (!isset($halaman)) {
 
 <aside class="control-sidebar control-sidebar-dark"></aside>
 </div>
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
-<!-- DataTables  & Plugins -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="plugins/jszip/jszip.min.js"></script>
-<script src="plugins/pdfmake/pdfmake.min.js"></script>
-<script src="plugins/pdfmake/vfs_fonts.js"></script>
-<script src="dist/js/adminlte.min.js"></script>
 <script>
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()

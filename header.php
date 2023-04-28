@@ -1,16 +1,16 @@
 <?php
 include "function.php";
 $user = $_SESSION['user'];
-if(!isset($halaman)){
+if (!isset($halaman)) {
     header("Location: 404.php");
     exit();
 }
-if(!isset($_SESSION['user'])){
+if (!isset($_SESSION['user'])) {
     header('location: login.php', true, 301);
     exit();
 }
-if(isset($_POST['logout'])){
-    auth('logout','');
+if (isset($_POST['logout'])) {
+    auth('logout', '');
     header('location: login.php', true, 301);
     exit();
 }
@@ -24,8 +24,7 @@ if(isset($_POST['logout'])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $halaman ?> - Klinik IMK</title>
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
@@ -34,9 +33,21 @@ if(isset($_POST['logout'])){
     <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="plugins/print/print.min.css">
 
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="plugins/print/print.min.js"></script>
+    <script src="dist/js/adminlte.min.js"></script>
     <script>
         let data = [];
     </script>
@@ -61,8 +72,7 @@ if(isset($_POST['logout'])){
                             <i class="fas fa-cog mr-2"></i> Ubah Password
                         </a>
                         <form method='post'>
-                            <button type='submit' name='logout' class='btn btn-link dropdown-item'><i
-                                    class="fas fa-sign-out-alt mr-2"></i> Keluar</button>
+                            <button type='submit' name='logout' class='btn btn-link dropdown-item'><i class="fas fa-sign-out-alt mr-2"></i> Keluar</button>
                         </form>
                     </div>
                 </li>
@@ -71,8 +81,7 @@ if(isset($_POST['logout'])){
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="index3.html" class="brand-link">
-                <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
+                <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Klinik IMK</span>
             </a>
 
@@ -87,28 +96,27 @@ if(isset($_POST['logout'])){
                 </div>
 
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="index.php" class="nav-link <?= $halaman=="Dashboard" ? "active" : "" ?>">
+                            <a href="index.php" class="nav-link <?= $halaman == "Dashboard" ? "active" : "" ?>">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <?php if($user['id']==1){ ?>
-                        <li class="nav-item">
-                            <a href="pengguna.php" class="nav-link <?= $halaman=="Kelola Pengguna" ? "active" : "" ?>">
-                                <i class="nav-icon fas fa-users-cog"></i>
-                                <p>
-                                    Pengguna
-                                </p>
-                            </a>
-                        </li>
+                        <?php if ($user['id'] == 1) { ?>
+                            <li class="nav-item">
+                                <a href="pengguna.php" class="nav-link <?= $halaman == "Kelola Pengguna" ? "active" : "" ?>">
+                                    <i class="nav-icon fas fa-users-cog"></i>
+                                    <p>
+                                        Pengguna
+                                    </p>
+                                </a>
+                            </li>
                         <?php } ?>
                         <li class="nav-item">
-                            <a href="obat.php" class="nav-link <?= $halaman=="Data Obat" ? "active" : "" ?>">
+                            <a href="obat.php" class="nav-link <?= $halaman == "Data Obat" ? "active" : "" ?>">
                                 <i class="nav-icon fas fa-medkit"></i>
                                 <p>
                                     Data Obat
@@ -116,7 +124,7 @@ if(isset($_POST['logout'])){
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="obat-masuk.php" class="nav-link <?= $halaman=="Obat Masuk" ? "active" : "" ?>">
+                            <a href="obat-masuk.php" class="nav-link <?= $halaman == "Obat Masuk" ? "active" : "" ?>">
                                 <i class="nav-icon fas fa-pills"></i>
                                 <p>
                                     Kelola Obat Masuk
@@ -124,7 +132,7 @@ if(isset($_POST['logout'])){
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="obat-keluar.php" class="nav-link <?= $halaman=="Obat Keluar" ? "active" : "" ?>">
+                            <a href="obat-keluar.php" class="nav-link <?= $halaman == "Obat Keluar" ? "active" : "" ?>">
                                 <i class="nav-icon fas fa-pills"></i>
                                 <p>
                                     Kelola Obat Keluar
@@ -132,7 +140,7 @@ if(isset($_POST['logout'])){
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="laporan.php" class="nav-link <?= $halaman=="Laporan" ? "active" : "" ?>">
+                            <a href="laporan.php" class="nav-link <?= $halaman == "Laporan" ? "active" : "" ?>">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>
                                     Laporan
