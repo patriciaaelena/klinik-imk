@@ -121,7 +121,7 @@ function admin($aksi, $data)
             ];
             break;
         default:
-            $query = "SELECT id_adm,nama_adm,username,hp_adm FROM admin";
+            $query = "SELECT id_adm,nama_adm,username,hp_adm FROM admin WHERE id_adm<>1";
             $result = $conn->query($query);
             $arrData = [];
             while ($row = $result->fetch_assoc()) {
