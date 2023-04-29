@@ -1,6 +1,13 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+ini_set('html_errors', 1);
+ini_set('error_reporting', -1);
+error_reporting(E_ALL);
 session_start();
 ob_start();
+date_default_timezone_set('Asia/Jakarta');
+setlocale(LC_ALL, 'id_ID');
 
 $servername = "localhost";
 $username = "root";
@@ -105,7 +112,15 @@ function admin($aksi, $data)
             break;
         case 'hapus':
             $query = "DELETE FROM admin WHERE id_adm='$data[id_adm]'";
-            $result = $conn->query($query);
+            try {
+                $result = $conn->query($query);
+            } catch (\Throwable $th) {
+                $_SESSION['smess'] = [
+                    'status' => false,
+                    'alert' => 'error',
+                    'msg' => "Gagal menghapus pengguna!",
+                ];
+            }
             if ($conn->affected_rows == 1) {
                 $_SESSION['smess'] = [
                     'status' => true,
@@ -114,11 +129,6 @@ function admin($aksi, $data)
                 ];
                 return true;
             }
-            $_SESSION['smess'] = [
-                'status' => false,
-                'alert' => 'error',
-                'msg' => "Gagal menghapus pengguna!",
-            ];
             break;
         default:
             $query = "SELECT id_adm,nama_adm,username,hp_adm FROM admin WHERE id_adm<>1";
@@ -173,7 +183,15 @@ function obat($aksi, $data)
             break;
         case 'hapus':
             $query = "DELETE FROM obat WHERE id_obat='$data[id_obat]'";
-            $result = $conn->query($query);
+            try {
+                $result = $conn->query($query);
+            } catch (\Throwable $th) {
+                $_SESSION['smess'] = [
+                    'status' => false,
+                    'alert' => 'error',
+                    'msg' => "Gagal menghapus data obat!",
+                ];
+            }
             if ($conn->affected_rows == 1) {
                 $_SESSION['smess'] = [
                     'status' => true,
@@ -182,11 +200,6 @@ function obat($aksi, $data)
                 ];
                 return true;
             }
-            $_SESSION['smess'] = [
-                'status' => false,
-                'alert' => 'error',
-                'msg' => "Gagal menghapus data obat!",
-            ];
             break;
         default:
             $query = "SELECT o.*,a.nama_adm FROM obat o JOIN admin a USING(id_adm)";
@@ -359,4 +372,42 @@ function component($type, $data)
             return $arrData;
             break;
     }
+}
+
+function laporan($table, $condition)
+{
+    global $conn;
+    $res = "";
+    $arrData = [];
+    if ($table == "obat") {
+        $query = "SELECT o.*,a.nama_adm FROM obat o JOIN admin a USING(id_adm)";
+        $query .= $condition == 'Semua' ? "" : " WHERE jenis='$condition'";
+    } else {
+        if (gettype($condition) == 'array') {
+            $sampai = date("Y-m-d",strtotime("+1 day",strtotime($condition['sampai'])));
+            $dari = $condition['dari'];
+            if ($table == "Masuk") {
+                $query = "SELECT*FROM (SELECT o.nama_obat,a.nama_adm,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa  FROM obat o JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON om.id_adm=a.id_adm GROUP BY id_obat_masuk) tb WHERE tgl_masuk BETWEEN '$dari' AND '$sampai' ORDER BY nama_obat, tgl_masuk, tgl_kdwrs";
+            } else {
+                $query = "SELECT o.id_obat,o.nama_obat,a.nama_adm,om.id_obat_masuk,ok.*  FROM obat o JOIN obat_masuk om USING(id_obat) RIGHT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON a.id_adm=ok.id_adm WHERE tgl_keluar BETWEEN '$dari' AND '$sampai'";
+            }
+        } else {
+            $sampai = in_array($condition, ["1", "3"]) ? date("Y-m-d", time() + 86400) : ($condition == "2" ? date("Y-m-d") : date("Y-m-01"));
+            $dari = $condition == "1" ? date("Y-m-d") : ($condition == "2" ? date("Y-m-d", time() - 86400) : ($condition == "3" ? date("Y-m-01") : date('Y-m-01', strtotime('-1 month', strtotime(date("Y-m-d"))))));
+            if ($table == "Masuk") {
+                $query = "SELECT*FROM (SELECT o.nama_obat,a.nama_adm,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa  FROM obat o JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON om.id_adm=a.id_adm GROUP BY id_obat_masuk) tb WHERE tgl_masuk BETWEEN '$dari' AND '$sampai' ORDER BY nama_obat, tgl_masuk, tgl_kdwrs";
+            } else {
+                $query = "SELECT o.id_obat,o.nama_obat,a.nama_adm,om.id_obat_masuk,ok.*  FROM obat o JOIN obat_masuk om USING(id_obat) RIGHT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON a.id_adm=ok.id_adm WHERE tgl_keluar BETWEEN '$dari' AND '$sampai'";
+            }
+        }
+    }
+    $res = $conn->query($query);
+    foreach ($res as $row) {
+        array_push($arrData, $row);
+    }
+    return [
+        "data" => $arrData,
+        "dari" => isset($dari) ? $dari : "",
+        "sampai" => isset($sampai) ? $sampai : "",
+    ];
 }

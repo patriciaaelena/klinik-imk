@@ -114,7 +114,7 @@ $obat = obat('', '');
     }
     $(document).ready(() => {
         const dateNow = new Date();
-        const dateNowStr = `${dateNow.getFullYear()}-${String(dateNow.getMonth()).padStart(2,'0')}-${String(dateNow.getDate()).padStart(2,'0')}`;
+        const dateNowStr = `${dateNow.getFullYear()}-${String(dateNow.getMonth()+1).padStart(2,'0')}-${String(dateNow.getDate()).padStart(2,'0')}`;
         const kategori = $('#kategori');
         const jenis = $('#jenis');
         const per = $('#per');
