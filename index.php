@@ -1,6 +1,7 @@
 <?php
 $halaman = "Dashboard";
 include "header.php";
+$data = dashboard();
 ?>
 <div class="content-wrapper">
     <section class="content-header">
@@ -15,67 +16,83 @@ include "header.php";
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>150</h3>
-
-                            <p>New Orders</p>
-                        </div>
-                        <div class="icon">
+                <?php if ($user['id'] == 1) { ?>
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box h-100 d-flex flex-column bg-info">
+                            <div class="inner row flex-grow-1">
+                                <div class="col-3">
+                                    <h3><?= $data['admin'] ?></h3>
+                                </div>
+                                <div class="col-9">
+                                    <p>Pengguna<br>(termasuk admin)</p>
+                                </div>
+                            </div>
+                            <!-- <div class="icon">
                             <i class="ion ion-bag"></i>
+                        </div> -->
+                            <a href="pengguna.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
+                <?php } ?>
                 <!-- ./col -->
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>Bounce Rate</p>
+                    <div class="small-box h-100 d-flex flex-column bg-success">
+                        <div class="inner row flex-grow-1">
+                            <div class="col-4">
+                                <h3><?= $data['obat'] ?></h3>
+                            </div>
+                            <div class="col-8">
+                                <p>Data Obat</p>
+                            </div>
                         </div>
-                        <div class="icon">
+                        <!-- <div class="icon">
                             <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div> -->
+                        <a href="obat.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>44</h3>
-
-                            <p>User Registrations</p>
+                    <div class="small-box h-100 d-flex flex-column bg-danger">
+                        <div class="inner row flex-grow-1">
+                            <div class="col-4">
+                                <h3><?= $data['masuk']['jumlah'] ?></h3>
+                            </div>
+                            <div class="col-8">
+                                <p>Total Obat Masuk<br>bulan ini</p>
+                            </div>
                         </div>
-                        <div class="icon">
+                        <a href="obat-masuk.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box h-100 d-flex flex-column bg-warning">
+                        <div class="inner row flex-grow-1">
+                            <div class="col-4">
+                                <h3><?= $data['keluar']['jumlah'] ?></h3>
+
+                                <h3><?= $data['keluar']['kedaluwarsa'] ?></h3>
+                            </div>
+                            <div class="col-8">
+                                <p>Total<br>Obat Keluar</p>
+
+                                <p>Kedaluwarsa</p>
+                            </div>
+                            <center class="col-12">bulan ini</center>
+                        </div>
+                        <!-- <div class="icon">
                             <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div> -->
+                        <a href="obat-keluar.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>65</h3>
-
-                            <p>Unique Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
             </div>
+            <!-- <br>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -99,7 +116,7 @@ include "header.php";
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 </div>

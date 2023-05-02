@@ -61,6 +61,24 @@ function auth($aksi, $data)
     return false;
 }
 
+function dashboard(){
+    global $conn;
+    $data = [];
+    $query = "SELECT COUNT(id_adm) adm FROM admin";
+    $result = $conn->query($query);
+    $data['admin'] = $result->fetch_assoc()['adm'];
+    $query = "SELECT COUNT(id_obat) obt FROM obat";
+    $result = $conn->query($query);
+    $data['obat'] = $result->fetch_assoc()['obt'];
+    $query = "SELECT COUNT(id_obat) obat,COALESCE(SUM(awal),0) jumlah FROM obat_masuk WHERE MONTH(tgl_masuk)=MONTH(NOW())";
+    $result = $conn->query($query);
+    $data['masuk'] = $result->fetch_assoc();
+    $query = "SELECT COUNT(id_obat) obat,COALESCE(SUM(IF(kedaluwarsa>0,jumlah,0)),0) kedaluwarsa,COALESCE(SUM(jumlah),0) jumlah FROM obat_keluar JOIN obat_masuk USING(id_obat_masuk) WHERE MONTH(tgl_keluar)=MONTH(NOW())";
+    $result = $conn->query($query);
+    $data['keluar'] = $result->fetch_assoc();
+    return $data;
+}
+
 function admin($aksi, $data)
 {
     global $conn;
