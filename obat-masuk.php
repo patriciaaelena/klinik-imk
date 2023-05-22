@@ -30,6 +30,14 @@ if (isset($_POST['kedaluwarsa'])) {
 }
 $obat = obat('', '');
 $obatMasuk = obatMasuk('', '');
+$arrNewObat = [];
+foreach ($obat as $val) {
+    array_push($arrNewObat, [
+        'value' => $val['id_obat'],
+        'tag' => "$val[kode_obat] : $val[nama_obat]",
+    ]);
+}
+$arrNewObat = json_encode($arrNewObat);
 ?>
 <div class="content-wrapper">
     <section class="content-header">
@@ -59,8 +67,8 @@ $obatMasuk = obatMasuk('', '');
                             <table id="tabel1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Kode Masuk</th>
                                         <th>Nama Obat</th>
-                                        <th>ID Masuk</th>
                                         <th>Tanggal Masuk</th>
                                         <th>Tanggal Kedaluwarsa</th>
                                         <th>Jumlah Awal</th>
@@ -77,8 +85,8 @@ $obatMasuk = obatMasuk('', '');
                                         $datediff = round(($kdwrs - $now) / (60 * 60 * 24));
                                     ?>
                                         <tr>
+                                            <td><?= $value['kode_obat_masuk'] ?></td>
                                             <td><?= $value['nama_obat'] ?></td>
-                                            <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?></td>
                                             <td><?= $value['tgl_masuk'] ?></td>
                                             <td class="<?= $datediff <= 0 ? 'bg-danger' : ($datediff <= 30 ? 'bg-warning' : '') ?>"><?= $value['tgl_kdwrs'] ?> <?= $datediff <= 0 ? "(Kedaluwarsa)" : ($datediff <= 30 ? "(Kedaluwarsa dalam $datediff hari)" : "") ?></td>
                                             <td><?= $value['awal'] ?></td>
@@ -129,11 +137,7 @@ $obatMasuk = obatMasuk('', '');
                 <div class="modal-body">
                     <div class="form-group">
                         <label style="font-weight: 400;" for="id_obat">Nama Obat</label>
-                        <select class="form-control" name="id_obat" id="id_obat" required>
-                            <?php foreach ($obat as $val) { ?>
-                                <option value="<?= $val['id_obat'] ?>"><?= $val['id_obat'] ?> - <?= $val['nama_obat'] ?></option>
-                            <?php } ?>
-                        </select>
+                        <input type="text" class="form-control" name="id_obat" id="id_obat" />
                     </div>
                     <div class="form-group">
                         <label style="font-weight: 400;" for="tgl_masuk">Tanggal Masuk</label>
@@ -200,7 +204,18 @@ $obatMasuk = obatMasuk('', '');
         $("#jenis-ubah").val(jenis);
         $("#harga-ubah").val(harga);
     }
-    $(document).ready(() => {});
+    const listObat = JSON.parse('<?= $arrNewObat ?>');
+    $(document).ready(() => {
+        $('#modal-default1').on('shown.bs.modal', function(e) {
+            // do something...
+            $('#id_obat[name="id_obat"]').amsifySuggestags({
+                type: 'bootstrap',
+                suggestions: listObat,
+                tagLimit: 1,
+                whiteList: true,
+            });
+        })
+    });
 </script>
 <?php
 include "footer.php";

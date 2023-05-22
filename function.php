@@ -21,6 +21,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+function generateCode($type, $id)
+{
+    return "$type-" . sprintf("%03d", (int)$id);
+}
+
 function auth($aksi, $data)
 {
     switch ($aksi) {
@@ -61,7 +66,8 @@ function auth($aksi, $data)
     return false;
 }
 
-function dashboard(){
+function dashboard()
+{
     global $conn;
     $data = [];
     $query = "SELECT COUNT(id_adm) adm FROM admin";
@@ -169,6 +175,10 @@ function obat($aksi, $data)
             $query = "INSERT INTO obat(" . implode(",", array_keys($data)) . ") VALUES('" . implode("','", $data) . "')";
             $result = $conn->query($query);
             if ($conn->affected_rows == 1) {
+                $id = $conn->query("SELECT LAST_INSERT_ID() id")->fetch_assoc()['id'];
+                $code = generateCode("OBT",$id);
+                $result = $conn->query("UPDATE obat SET kode_obat='$code' WHERE id_obat='$id'");
+
                 $_SESSION['smess'] = [
                     'status' => true,
                     'alert' => 'success',
@@ -240,6 +250,10 @@ function obatMasuk($aksi, $data)
             $query = "INSERT INTO obat_masuk(" . implode(",", array_keys($data)) . ") VALUES('" . implode("','", $data) . "')";
             $result = $conn->query($query);
             if ($conn->affected_rows == 1) {
+                $id = $conn->query("SELECT LAST_INSERT_ID() id")->fetch_assoc()['id'];
+                $code = generateCode("OBT/IN",$id);
+                $result = $conn->query("UPDATE obat_masuk SET kode_obat_masuk='$code' WHERE id_obat_masuk='$id'");
+
                 $query = "UPDATE obat SET stok=stok+$data[awal] WHERE id_obat='$data[id_obat]'";
                 $result = $conn->query($query);
                 $_SESSION['smess'] = [
@@ -315,6 +329,10 @@ function obatKeluar($aksi, $data)
             $query = "INSERT INTO obat_keluar(" . implode(",", array_keys($data)) . ") VALUES('" . implode("','", $data) . "')";
             $result = $conn->query($query);
             if ($conn->affected_rows == 1) {
+                $id = $conn->query("SELECT LAST_INSERT_ID() id")->fetch_assoc()['id'];
+                $code = generateCode("OBT/OUT",$id);
+                $result = $conn->query("UPDATE obat_keluar SET kode_obat_keluar='$code' WHERE id_obat_keluar='$id'");
+
                 $query = "UPDATE obat SET stok=stok-$data[jumlah] WHERE id_obat='$id_obat'";
                 $result = $conn->query($query);
                 $query = "UPDATE obat_masuk SET tersedia=tersedia-$data[jumlah] WHERE id_obat_masuk='$data[id_obat_masuk]'";
@@ -381,6 +399,7 @@ function component($type, $data)
                 if ((int)$row['selisih'] >= 1) {
                     array_push($arrData, [
                         'id_obat_masuk' => $row['id_obat_masuk'],
+                        'kode_obat_masuk' => $row['kode_obat_masuk'],
                         'tersedia' => $row['tersedia'],
                         'nama_obat' => $row['nama_obat'],
                         'selisih' => $row['selisih'],
@@ -402,7 +421,7 @@ function laporan($table, $condition)
         $query .= $condition == 'Semua' ? "" : " WHERE jenis='$condition'";
     } else {
         if (gettype($condition) == 'array') {
-            $sampai = date("Y-m-d",strtotime("+1 day",strtotime($condition['sampai'])));
+            $sampai = date("Y-m-d", strtotime("+1 day", strtotime($condition['sampai'])));
             $dari = $condition['dari'];
             if ($table == "Masuk") {
                 $query = "SELECT*FROM (SELECT o.nama_obat,a.nama_adm,om.*,MAX(COALESCE(ok.kedaluwarsa, -1)) kedaluwarsa  FROM obat o JOIN obat_masuk om USING(id_obat) LEFT JOIN obat_keluar ok USING(id_obat_masuk) LEFT JOIN admin a ON om.id_adm=a.id_adm GROUP BY id_obat_masuk) tb WHERE tgl_masuk BETWEEN '$dari' AND '$sampai' ORDER BY nama_obat, tgl_masuk, tgl_kdwrs";

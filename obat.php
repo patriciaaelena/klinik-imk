@@ -51,6 +51,7 @@ $obat = obat('','');
                             <table id="tabel1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Kode Obat</th>
                                         <th>Nama Obat</th>
                                         <th>Jenis</th>
                                         <th>Stok</th>
@@ -62,6 +63,7 @@ $obat = obat('','');
                                 <tbody>
                                     <?php foreach ($obat as $value) { ?>
                                     <tr>
+                                        <td><?= $value['kode_obat'] ?></td>
                                         <td><?= $value['nama_obat'] ?></td>
                                         <td><?= $value['jenis'] ?></td>
                                         <td><?= $value['stok'] ?></td>

@@ -7,11 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $data = component('masuk', $_POST['id']);
 ?>
                 <div class="form-group">
-                    <label style="font-weight: 400;" for="id_obat_masuk">ID Masuk</label>
-                    <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" placeholder="Pilih ID Masuk" required>
-                        <option value="" selected disabled>-- Pilih ID Masuk --</option>
+                    <label style="font-weight: 400;" for="id_obat_masuk">Kode Masuk</label>
+                    <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" placeholder="Pilih Kode Masuk" required>
+                        <option value="" selected disabled>-- Pilih Kode Masuk --</option>
                         <?php foreach ($data as $row) { ?>
-                            <option value="<?= $row['id_obat_masuk'] ?>"><?= $_POST['id'] ?>-<?= $row['id_obat_masuk'] ?>: Stok <?= $row['tersedia'] ?><?= (int)$row['selisih'] < 30 ? ", Kedaluwarsa dalam $row[selisih] hari" : "" ?></option>
+                            <option value="<?= $row['id_obat_masuk'] ?>"><?= $row['kode_obat_masuk'] ?> : Stok <?= $row['tersedia'] ?><?= (int)$row['selisih'] < 30 ? ", Kedaluwarsa dalam $row[selisih] hari" : "" ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th>Kode Obat</th>
                             <th>Nama Obat</th>
                             <th>Jenis</th>
                             <th>Stok</th>
@@ -58,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <tbody>
                         <?php foreach ($laporan as $value) { ?>
                             <tr>
+                                <td><?= $value['kode_obat'] ?></td>
                                 <td><?= $value['nama_obat'] ?></td>
                                 <td><?= $value['jenis'] ?></td>
                                 <td><?= $value['stok'] ?></td>
@@ -99,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Kode Masuk</th>
                                     <th>Nama Obat</th>
-                                    <th>ID Masuk</th>
                                     <th>Tanggal Masuk</th>
                                     <th>Tanggal Kedaluwarsa</th>
                                     <th>Jumlah Awal</th>
@@ -115,8 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $datediff = round(($kdwrs - $now) / (60 * 60 * 24));
                                 ?>
                                     <tr>
+                                        <td><?= $value['kode_obat_masuk'] ?></td>
                                         <td><?= $value['nama_obat'] ?></td>
-                                        <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?></td>
                                         <td><?= $value['tgl_masuk'] ?></td>
                                         <td class="<?= $datediff <= 0 ? 'bg-danger' : ($datediff <= 30 ? 'bg-warning' : '') ?>"><?= $value['tgl_kdwrs'] ?> <?= $datediff <= 0 ? "(Kedaluwarsa)" : ($datediff <= 30 ? "(Kedaluwarsa dalam $datediff hari)" : "") ?></td>
                                         <td><?= $value['awal'] ?></td>
@@ -132,8 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Kode Keluar</th>
                                     <th>Nama Obat</th>
-                                    <th>ID Keluar</th>
                                     <th>Tanggal Keluar</th>
                                     <th>Jumlah Keluar</th>
                                     <th>Pengelola</th>
@@ -143,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <tbody>
                                 <?php foreach ($laporan['data'] as $value) { ?>
                                     <tr>
+                                        <td><?= $value['kode_obat_keluar'] ?></td>
                                         <td><?= $value['nama_obat'] ?></td>
-                                        <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?>-<?= $value['id_obat_keluar'] ?></td>
                                         <td><?= $value['tgl_keluar'] ?></td>
                                         <td><?= $value['jumlah'] ?></td>
                                         <td><?= $value['nama_adm'] ?></td>
@@ -184,8 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Kode Masuk</th>
                                     <th>Nama Obat</th>
-                                    <th>ID Masuk</th>
                                     <th>Tanggal Masuk</th>
                                     <th>Tanggal Kedaluwarsa</th>
                                     <th>Jumlah Awal</th>
@@ -200,8 +202,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $datediff = round(($kdwrs - $now) / (60 * 60 * 24));
                                 ?>
                                     <tr>
+                                        <td><?= $value['kode_obat_masuk'] ?></td>
                                         <td><?= $value['nama_obat'] ?></td>
-                                        <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?></td>
                                         <td><?= $value['tgl_masuk'] ?></td>
                                         <td class="<?= $datediff <= 0 ? 'bg-danger' : ($datediff <= 30 ? 'bg-warning' : '') ?>"><?= $value['tgl_kdwrs'] ?> <?= $datediff <= 0 ? "(Kedaluwarsa)" : ($datediff <= 30 ? "(Kedaluwarsa dalam $datediff hari)" : "") ?></td>
                                         <td><?= $value['awal'] ?></td>
@@ -217,8 +219,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Kode Keluar</th>
                                     <th>Nama Obat</th>
-                                    <th>ID Keluar</th>
                                     <th>Tanggal Keluar</th>
                                     <th>Jumlah Keluar</th>
                                     <th>Pengelola</th>
@@ -228,8 +230,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <tbody>
                                 <?php foreach ($laporan['data'] as $value) { ?>
                                     <tr>
+                                        <td><?= $value['kode_obat_keluar'] ?></td>
                                         <td><?= $value['nama_obat'] ?></td>
-                                        <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?>-<?= $value['id_obat_keluar'] ?></td>
                                         <td><?= $value['tgl_keluar'] ?></td>
                                         <td><?= $value['jumlah'] ?></td>
                                         <td><?= $value['nama_adm'] ?></td>

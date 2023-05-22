@@ -51,8 +51,8 @@ $obatKeluar = obatKeluar('', '');
                             <table id="tabel1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Kode Keluar</th>
                                         <th>Nama Obat</th>
-                                        <th>ID Keluar</th>
                                         <th>Tanggal Keluar</th>
                                         <th>Jumlah Keluar</th>
                                         <th>Pengelola</th>
@@ -62,8 +62,8 @@ $obatKeluar = obatKeluar('', '');
                                 <tbody>
                                     <?php foreach ($obatKeluar as $value) { ?>
                                         <tr>
+                                            <td><?= $value['kode_obat_keluar'] ?></td>
                                             <td><?= $value['nama_obat'] ?></td>
-                                            <td><?= $value['id_obat'] ?>-<?= $value['id_obat_masuk'] ?>-<?= $value['id_obat_keluar'] ?></td>
                                             <td><?= $value['tgl_keluar'] ?></td>
                                             <td><?= $value['jumlah'] ?></td>
                                             <td><?= $value['nama_adm'] ?></td>
@@ -104,7 +104,7 @@ $obatKeluar = obatKeluar('', '');
                             foreach ($obat as $val) {
                                 if ((int)$val['stok'] != 0) {
                             ?>
-                                    <option value="<?= $val['id_obat'] ?>"><?= $val['id_obat'] ?> - <?= $val['nama_obat'] ?></option>
+                                    <option value="<?= $val['id_obat'] ?>"><?= $val['kode_obat'] ?> : <?= $val['nama_obat'] ?></option>
                             <?php
                                 }
                             }
@@ -113,9 +113,9 @@ $obatKeluar = obatKeluar('', '');
                     </div>
                     <div id="obat1">
                         <div class="form-group">
-                            <label style="font-weight: 400;" for="id_obat_masuk">ID Masuk</label>
-                            <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" placeholder="Pilih ID Masuk" required>
-                                <option value="" selected disabled>-- Pilih ID Masuk --</option>
+                            <label style="font-weight: 400;" for="id_obat_masuk">Kode Masuk</label>
+                            <select class="form-control" name="id_obat_masuk" id="id_obat_masuk" placeholder="Pilih Kode Masuk" required>
+                                <option value="" selected disabled>-- Pilih Kode Masuk --</option>
                             </select>
                         </div>
                         <div class="form-group">
