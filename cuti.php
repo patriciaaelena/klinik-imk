@@ -23,9 +23,16 @@ if (isset($_POST['ajukan'])) {
 $rows = JenisCuti();
 $userCuti = $user;
 unset($userCuti['sign']);
+$displayAlert = false;
 $template = TemplatePersetujuan('GET-PERJOB', $userCuti);
 $pengajuan = PengajuanCuti('GET-ONE', ['status_pengajuan' => 'Proses', 'id_pegawai' => $user['id_pegawai']]);
-if ($template['id_tamplate'] !== NULL && $template['nama_pertama'] !== NULL && $template['nama_kedua'] !== NULL) {
+if ($pengajuan === NULL) {
+  $pengajuan = PengajuanCuti('GET-ONE-SIMPLE', ['status_pengajuan' => 'Disetujui', 'id_pegawai' => $user['id_pegawai']]);
+  if ($pengajuan !== NULL) {
+    $displayAlert = $pengajuan['status_pengajuan'] === "Disetujui";
+  }
+}
+if ($template['id_tamplate'] !== NULL && $template['nama_pertama'] !== NULL && $template['nama_kedua'] !== NULL && !$displayAlert) {
 ?>
   <div class="content-header">
     <div class="container-fluid">
@@ -42,7 +49,7 @@ if ($template['id_tamplate'] !== NULL && $template['nama_pertama'] !== NULL && $
     </div>
   </div>
   <?php
-  if ($pengajuan == false) {
+  if ($pengajuan === NULL) {
     $add = [];
     if (isset($_SESSION['flash']['type'])) {
       if ($_SESSION['flash']['type'] === 'ADD') {
