@@ -11907,7 +11907,7 @@ a.text-dark:focus {
   height: 100vh;
   width: 100%;
   transition: height 200ms linear;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   z-index: 9999;
@@ -11934,6 +11934,7 @@ body,
 
 .wrapper .content-wrapper {
   min-height: calc(100vh - calc(3.5rem + 1px) - calc(3.5rem + 1px));
+  position: relative;
 }
 
 .layout-boxed .wrapper {
