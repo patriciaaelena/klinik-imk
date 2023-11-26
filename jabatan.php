@@ -1,9 +1,9 @@
 <?php
 $halaman = 'Jabatan';
 require_once('./head.php');
-require_once('./function/Unitkerja.php');
-require_once('./function/Jabatan.php');
-require_once('./function/TemplatePersetujuan.php');
+// require_once('./function/Unitkerja.php');
+// require_once('./function/Jabatan.php');
+// require_once('./function/TemplatePersetujuan.php');
 if ($_SESSION['auth']['role'] != '0') {
   require_once('./401.php');
   die;
