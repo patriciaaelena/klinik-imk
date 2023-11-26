@@ -26,9 +26,12 @@ if (isset($_POST['hapus'])) {
   header("Refresh:0");
   die;
 }
-$select1 = UnitKerja('', []);
-$select2 = TemplatePersetujuan('', []);
-$rows = Jabatan('', []);
+// $select1 = UnitKerja('', []);
+// $select2 = TemplatePersetujuan('', []);
+// $rows = Jabatan('', []);
+$select1 = [];
+$select2 = [];
+$rows = [];
 ?>
 <div class="content-header">
   <div class="container-fluid">
