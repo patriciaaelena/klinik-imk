@@ -4,6 +4,16 @@ if (!isset($halaman)) {
   die;
 }
 ?>
+<?php if (isset($user['sign'])) { ?>
+  <li class="nav-item">
+    <a href="<?= $halaman === 'Permohonan Cuti' ? 'javascript:void(0)' : './permohonan-cuti' ?>" class="nav-link <?= $halaman === 'Permohonan Cuti' ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-tachometer-alt"></i>
+      <p>
+        Permohonan Cuti
+      </p>
+    </a>
+  </li>
+<?php } ?>
 <li class="nav-item">
   <a href="<?= $halaman === 'Cuti' ? 'javascript:void(0)' : './cuti' ?>" class="nav-link <?= $halaman === 'Cuti' ? 'active' : '' ?>">
     <i class="nav-icon fas fa-tachometer-alt"></i>

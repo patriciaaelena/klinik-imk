@@ -4,21 +4,26 @@ if (!isset($halaman)) {
   die;
 }
 require_once('./function/PengajuanCuti.php');
-$pengajuan = PengajuanCuti('GET-ONE', ['status_pengajuan' => 'Proses', 'id_pegawai' => $user['id_pegawai']]);
+$pengajuan = PengajuanCuti('GET-ONE-SIMPLE', ['status_pengajuan' => 'Proses', 'id_pegawai' => $user['id_pegawai']]);
+if ($pengajuan === NULL) {
+  $pengajuan = PengajuanCuti('GET-ONE-SIMPLE', ['status_pengajuan' => 'Disetujui', 'id_pegawai' => $user['id_pegawai']]);
+}
 ?>
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <div class="info-box mb-3 bg-<?= $pengajuan === NULL ? "secondary" : "warning" ?> justify-content-between">
+      <div class="info-box mb-3 bg-<?= $pengajuan === NULL ? "info" : ($pengajuan['status_pengajuan'] === "Proses" ? "warning" : "success") ?> justify-content-between">
         <div class="d-flex">
           <span class="info-box-icon"><i class="fas fa-info-circle"></i></span>
           <div class="info-box-content flex">
-            <span class="info-box-text"><?= $pengajuan === NULL ? "Tidak Ada Pengajuan Cuti" : "Sedang Proses Pengajuan" ?></span>
+            <span class="info-box-text"><?= $pengajuan === NULL ? "Tidak Ada Pengajuan Cuti" : ($pengajuan['status_pengajuan'] === "Proses" ? "Sedang Proses Pengajuan" : "Pengajuan Cuti Disetujui, dari " . $fmt->format(strtotime($pengajuan['mulai_cuti'])) . " hingga " . $fmt->format(strtotime($pengajuan['selesai_cuti'])) . " ($pengajuan[lama_cuti] hari)") ?></span>
           </div>
         </div>
-        <div class="d-flex align-items-center pr-3">
-          <a href="./cuti" class="btn btn-primary"><?= $pengajuan === NULL ? "Ajukan Cuti" : "Periksa" ?></a>
-        </div>
+        <?php if ($pengajuan === NULL || $pengajuan['status_pengajuan'] !== "Disetujui") { ?>
+          <div class="d-flex align-items-center pr-3">
+            <a href="./cuti" class="btn btn-primary"><?= $pengajuan === NULL ? "Ajukan Cuti" : "Periksa" ?></a>
+          </div>
+        <?php } ?>
         <!-- /.info-box-content -->
       </div>
     </div>
@@ -319,7 +324,7 @@ $pengajuan = PengajuanCuti('GET-ONE', ['status_pengajuan' => 'Proses', 'id_pegaw
               </div>
             </div>
             <!-- /.card-header -->
-            
+
             <!-- /.card-body -->
             <div class="card-footer">
               <form action="#" method="post">
