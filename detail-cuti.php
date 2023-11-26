@@ -41,9 +41,9 @@ if ($pengajuan === NULL) {
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <div class="info-box mb-3 bg-<?= $pengajuan['status_pengajuan'] === 'Proses' ? "warning" : ($pengajuan['status_pengajuan'] === 'Diterima' ? "success" : ($pengajuan['status_pengajuan'] === 'Ditolak' ? "danger" : "secondary")) ?> justify-content-between">
+        <div class="info-box mb-3 bg-<?= $pengajuan['status_pengajuan'] === 'Proses' ? "warning" : ($pengajuan['status_pengajuan'] === 'Disetujui' ? "success" : ($pengajuan['status_pengajuan'] === 'Tidak Disetujui' ? "danger" : "secondary")) ?> justify-content-between">
           <div class="d-flex">
-            <span class="info-box-icon"><i class="fas <?= $pengajuan['status_pengajuan'] === 'Proses' ? "fa-info-circle" : ($pengajuan['status_pengajuan'] === 'Diterima' ? "fa-check-circle" : ($pengajuan['status_pengajuan'] === 'Ditolak' ? "fa-times-circle" : "secondary")) ?>"></i></span>
+            <span class="info-box-icon"><i class="fas <?= $pengajuan['status_pengajuan'] === 'Proses' ? "fa-info-circle" : ($pengajuan['status_pengajuan'] === 'Disetujui' ? "fa-check-circle" : ($pengajuan['status_pengajuan'] === 'Tidak Disetujui' ? "fa-times-circle" : "secondary")) ?>"></i></span>
             <div class="info-box-content flex">
               <span class="info-box-text"><?= $pengajuan['status_pengajuan'] === 'Proses' ? "Sedang Proses Pengajuan" : "Pengajuan $pengajuan[status_pengajuan]" ?></span>
             </div>
@@ -136,7 +136,7 @@ if ($pengajuan === NULL) {
               </div>
             </div>
           </div>
-          <?php if ($pengajuan['status_pengajuan'] !== 'Proses' && $pengajuan['status_pengajuan'] !== 'Diterima') { ?>
+          <?php if ($pengajuan['status_pengajuan'] !== 'Proses' && $pengajuan['status_pengajuan'] !== 'Disetujui') { ?>
             <div class="row">
               <div class="form-group col-12 d-flex align-items-center">
                 <label for="inputEmail3" class="col-3">Alasan</label>

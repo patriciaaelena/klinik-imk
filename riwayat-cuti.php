@@ -59,7 +59,7 @@ $rows = PengajuanCuti('', ['id_pegawai' => $user['id_pegawai']]);
                     <td><?= $fmt->format(strtotime($row['mulai_cuti'])) ?></td>
                     <td><?= $row['lama_cuti'] . " hari" ?></td>
                     <td>
-                      <div class="bg-<?= $row['status_pengajuan'] === 'Proses' ? "warning" : ($row['status_pengajuan'] === 'Diterima' ? "success" : ($row['status_pengajuan'] === 'Ditolak' ? "danger" : "secondary")) ?> rounded-pill text-center mx-3 py-1">
+                      <div class="bg-<?= $row['status_pengajuan'] === 'Proses' ? "warning" : ($row['status_pengajuan'] === 'Disetujui' ? "success" : ($row['status_pengajuan'] === 'Tidak Disetujui' ? "danger" : "secondary")) ?> rounded-pill text-center mx-3 py-1">
                         <?= $row['status_pengajuan'] ?>
                       </div>
                     </td>
