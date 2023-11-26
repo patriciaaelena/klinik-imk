@@ -100,7 +100,7 @@ if ($pengajuan === NULL) {
                 </div>
                 <div class="flex-grow-1">
                   <div class="bg-<?= $pengajuan['ttd_pertama'] === NULL ? "warning" : "success" ?> rounded-pill text-center mx-3 py-1">
-                    <?= $pengajuan['ttd_pertama'] === NULL ? "Proses" : "Disetujui pada " . $pengajuan['ttd_pertama'] ?>
+                    <?= $pengajuan['ttd_pertama'] === NULL ? "Proses" : "Disetujui pada " . $fmt->format(strtotime($pengajuan['ttd_pertama'])) ?>
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@ if ($pengajuan === NULL) {
                 </div>
                 <div class="flex-grow-1">
                   <div class="bg-<?= $pengajuan['ttd_kedua'] === NULL ? "warning" : "success" ?> rounded-pill text-center mx-3 py-1">
-                    <?= $pengajuan['ttd_kedua'] === NULL ? "Proses" : "Disetujui pada " . $pengajuan['ttd_kedua'] ?>
+                    <?= $pengajuan['ttd_kedua'] === NULL ? "Proses" : "Disetujui pada " . $fmt->format(strtotime($pengajuan['ttd_kedua'])) ?>
                   </div>
                 </div>
               </div>
