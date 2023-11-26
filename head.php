@@ -68,9 +68,11 @@ if (isset($_POST['logout'])) {
                   <div>
                     <?= $_SESSION['auth']['id_pegawai'] !== NULL ? $_SESSION['auth']['nama_pegawai'] : $_SESSION['auth']['username'] ?>
                   </div>
-                  <div>
-                    <?= $_SESSION['auth']['nip'] != NULL ? "NIP. " . $_SESSION['auth']['nip'] : "NIK. " . $_SESSION['auth']['nik'] ?>
-                  </div>
+                  <?php if ($_SESSION['auth']['nik'] !== NULL) { ?>
+                    <div>
+                      <?= $_SESSION['auth']['nip'] != NULL ? "NIP. " . $_SESSION['auth']['nip'] : "NIK. " . $_SESSION['auth']['nik'] ?>
+                    </div>
+                  <?php } ?>
                 </div>
               </div>
             </div>
