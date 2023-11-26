@@ -124,6 +124,20 @@ if (!isset($halaman)) {
       // ------------->
     <?php } ?>
   <?php } ?>
+  <?php if (isset($displayAlert)) { ?>
+    <?php if ($displayAlert) { ?>
+      // swal
+      Swal.fire({
+        icon: "info",
+        title: "Masih dalam masa cuti!",
+        text: "Tidak dapat mengajukan cuti selama masa cuti belum selesai.",
+        timer: 3000,
+      }).then(() => {
+        window.location.replace("./")
+      });
+      // ------------->
+    <?php } ?>
+  <?php } ?>
 </script>
 </body>
 
