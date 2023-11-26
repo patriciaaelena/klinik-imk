@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2023 at 02:10 PM
+-- Generation Time: Nov 26, 2023 at 05:36 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -124,7 +124,7 @@ CREATE TABLE `pengajuan_cuti` (
 --
 
 INSERT INTO `pengajuan_cuti` (`id_pengajuan`, `id_pegawai`, `id_jeniscuti`, `lama_cuti`, `alasan`, `mulai_cuti`, `selesai_cuti`, `catatan_cuti`, `alamat_cuti`, `no_hp`, `ttd_pertama`, `ttd_kedua`, `tanggal_modifikasi`, `status_pengajuan`, `dokumen`) VALUES
-(10, 5, 1, 1, 'asdadasd', '2023-12-05', '2023-12-05', '', 'asdasdasdad', '', NULL, NULL, '2023-11-25', 'Proses', '');
+(10, 5, 1, 1, 'asdadasd', '2023-12-05', '2023-12-05', '', 'asdasdasdad', '', '2023-11-26', '2023-11-26', '2023-11-25', 'Disetujui', '');
 
 -- --------------------------------------------------------
 
