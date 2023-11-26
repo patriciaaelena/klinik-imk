@@ -1,9 +1,9 @@
 <?php
 $halaman = 'Jabatan';
 require_once('./head.php');
-// require_once('./function/Unitkerja.php');
-// require_once('./function/Jabatan.php');
-// require_once('./function/TemplatePersetujuan.php');
+require_once('./function/Unitkerja.php');
+require_once('./function/Jabatan.php');
+require_once('./function/TemplatePersetujuan.php');
 if ($_SESSION['auth']['role'] != '0') {
   require_once('./401.php');
   die;
@@ -26,12 +26,12 @@ if (isset($_POST['hapus'])) {
   header("Refresh:0");
   die;
 }
-// $select1 = UnitKerja('', []);
-// $select2 = TemplatePersetujuan('', []);
-// $rows = Jabatan('', []);
-$select1 = [];
-$select2 = [];
-$rows = [];
+$select1 = UnitKerja('', []);
+$select2 = TemplatePersetujuan('', []);
+$rows = Jabatan('', []);
+// $select1 = [];
+// $select2 = [];
+// $rows = [];
 ?>
 <div class="content-header">
   <div class="container-fluid">
@@ -230,7 +230,7 @@ $rows = [];
     <input type="hidden" name="hapus">
   </form>
 </section>
-<!-- <script>
+<script>
   const handleEdit = (id, name, unit, template, checked) => {
     $('#id_jabatan').val(id);
     $('#nama_jabatan').val(name);
@@ -270,7 +270,7 @@ $rows = [];
       <?php } ?>
     <?php } ?>
   });
-</script> -->
+</script>
 <?php
 require_once('./foot.php');
 ?>
