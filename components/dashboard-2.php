@@ -16,7 +16,20 @@ if ($pengajuan === NULL) {
         <div class="d-flex">
           <span class="info-box-icon"><i class="fas fa-info-circle"></i></span>
           <div class="info-box-content flex">
-            <span class="info-box-text"><?= $pengajuan === NULL ? "Tidak Ada Pengajuan Cuti" : ($pengajuan['status_pengajuan'] === "Proses" ? "Sedang Proses Pengajuan" : "Pengajuan Cuti Disetujui, dari " . $fmt->format(strtotime($pengajuan['mulai_cuti'])) . " hingga " . $fmt->format(strtotime($pengajuan['selesai_cuti'])) . " ($pengajuan[lama_cuti] hari)") ?></span>
+            <?php
+            $msg = "Tidak Ada Pengajuan Cuti";
+            if ($pengajuan !== NULL) {
+              if ($pengajuan['status_pengajuan'] === "Proses") {
+                $msg = "Sedang Proses Pengajuan";
+              } else {
+                $msg = "Pengajuan Cuti Disetujui, untuk cuti ";
+                $msg .= (int)$pengajuan['lama_cuti'] < 2 ? "pada " . $fmt->format(strtotime($pengajuan['mulai_cuti']))
+                  : "mulai dari " . $fmt->format(strtotime($pengajuan['mulai_cuti'])) . " hingga " . $fmt->format(strtotime($pengajuan['selesai_cuti']));
+                $msg .= " ($pengajuan[lama_cuti] hari)";
+              }
+            }
+            ?>
+            <span class="info-box-text"><?= $msg ?></span>
           </div>
         </div>
         <?php if ($pengajuan === NULL || $pengajuan['status_pengajuan'] !== "Disetujui") { ?>

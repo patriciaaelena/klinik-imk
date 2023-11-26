@@ -99,14 +99,19 @@ if ($posisi === 'ttd_pertama') {
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <div class="info-box mb-3 d-flex flex-column flex-grow-1 justify-content-between px-3 pt-4">
-          <div class="row">
-            <div class="col-12 d-flex justify-content-end py-3">
-              <div class="bg-<?= $pengajuan['status_pengajuan'] === "Proses" ? "warning" : ($pengajuan['status_pengajuan'] === "Disetujui" ? "success" : ($pengajuan['status_pengajuan'] === "Tidak Disetujui" ? "danger" : "secondary")) ?> rounded-pill text-center px-4 py-1">
-                <?= $pengajuan['status_pengajuan'] ?>
+        <div class="row">
+          <div class="col">
+            <div class="info-box mb-3 bg-<?= $pengajuan['status_pengajuan'] === 'Proses' ? "warning" : ($pengajuan['status_pengajuan'] === 'Disetujui' ? "success" : ($pengajuan['status_pengajuan'] === 'Tidak Disetujui' ? "danger" : "secondary")) ?> justify-content-between">
+              <div class="d-flex">
+                <span class="info-box-icon"><i class="fas <?= $pengajuan['status_pengajuan'] === 'Proses' ? "fa-info-circle" : ($pengajuan['status_pengajuan'] === 'Disetujui' ? "fa-check-circle" : ($pengajuan['status_pengajuan'] === 'Tidak Disetujui' ? "fa-times-circle" : "fa-info-circle")) ?>"></i></span>
+                <div class="info-box-content flex">
+                  <span class="info-box-text"><?= $pengajuan['status_pengajuan'] === 'Proses' ? "Sedang Proses Pengajuan" : "Pengajuan $pengajuan[status_pengajuan]" ?></span>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="info-box mb-3 d-flex flex-column flex-grow-1 justify-content-between px-3 pt-4">
           <div class="row">
             <div class="form-group col-12 col-xl-6 d-flex align-items-center">
               <label for="inputEmail3" class="col-3">Jenis Cuti</label>
