@@ -101,6 +101,6 @@ $user = $_SESSION['auth'];
       </div>
     </aside>
     <div class="content-wrapper">
-      <div class="preloader flex-column justify-content-center align-items-center">
+      <!-- <div class="preloader flex-column justify-content-center align-items-center">
         <img class="animation__wobble drop-shadow" src="./dist/img/upr.png" alt="UPRLogo" height="100" width="100">
-      </div>
+      </div> -->
