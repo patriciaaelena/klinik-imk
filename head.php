@@ -1,6 +1,5 @@
 <?php
 require_once('function.php');
-$user = $_SESSION['auth'];
 if (!isset($_SESSION['auth'])) {
   header("Location: ./login");
   die;
@@ -10,6 +9,7 @@ if (isset($_POST['logout'])) {
   header("Refresh:0");
   die;
 }
+$user = $_SESSION['auth'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
