@@ -52,8 +52,6 @@ function Auth($type, $data)
             $_SESSION['auth']['sign'] = $data;
             echo "asdasd";
           }
-          // dd($data);
-          dd($_SESSION['auth']);
           return;
         }
       }
