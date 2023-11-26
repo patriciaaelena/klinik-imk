@@ -34,6 +34,7 @@ if ($pengajuan == false) {
   require_once('./404.php');
   die;
 }
+$ttd = "<div class='custom-center'>&#x2714;</div>";
 $state = ['Disetujui', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'];
 $state1 = ['Disetujui', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'];
 $msg1 = ['<br>', '<br>', '<br>', '<br>'];
@@ -284,12 +285,8 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
           <td class="px-only-3 border-inline border-dark text-center" colspan="3">Hormat saya</td>
         </tr>
         <tr>
-          <td class="px-only-3 border-inline border-dark"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="3"><br></td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border-inline border-dark"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="3"><br></td>
+          <td class="px-only-3 border-inline border-dark"><br><br></td>
+          <td class="px-only-3 border-inline border-dark position-relative" colspan="3"><?= $ttd ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark"></td>
@@ -297,7 +294,7 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
         </tr>
         <tr>
           <td class="px-only-3 border-inline-end border-dark"></td>
-          <td class="px-only-3 border-inline-end border-dark text-center" colspan="3">NIP. 12312312323424</td>
+          <td class="px-only-3 border-inline-end border-dark text-center" colspan="3"><?= empty($pengajuan['nip']) ? "NIK." : "NIP." ?> <?= empty($pengajuan['nip']) ? $pengajuan['nik'] : $pengajuan['nip'] ?></td>
         </tr>
       </table>
       <table>
@@ -319,12 +316,8 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
           <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= explode(" - ", $pengajuan['jabatan_pertama'])[0] ?></td>
         </tr>
         <tr>
-          <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2"><br></td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2"><br></td>
+          <td class="px-only-3 border-inline border-dark" colspan="2"><br><br></td>
+          <td class="px-only-3 border-inline border-dark position-relative" colspan="2"><?= $pengajuan['ttd_pertama'] !== NULL ? $ttd : "" ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
@@ -354,12 +347,8 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
           <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= explode(" - ", $pengajuan['jabatan_kedua'])[0] ?></td>
         </tr>
         <tr>
-          <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2"><br></td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2"><br></td>
+          <td class="px-only-3 border-inline border-dark" colspan="2"><br><br></td>
+          <td class="px-only-3 border-inline border-dark position-relative" colspan="2"><?= $pengajuan['ttd_kedua'] !== NULL ? $ttd : "" ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
