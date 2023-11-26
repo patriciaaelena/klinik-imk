@@ -48,10 +48,12 @@ $rows = Pegawai('', []);
             <table id="main-table" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th style="width: 30px">No</th>
+                  <th style="width: 25px">No</th>
                   <th style="width: 40px">Aksi</th>
                   <th style="width: 120px">NIK</th>
                   <th style="width: 120px">NIP</th>
+                  <th style="width: 200px">Unit Kerja</th>
+                  <th style="width: 260px">Jabatan</th>
                   <th>Nama Pegawai</th>
                   <th style="width: 50px">Status</th>
                 </tr>
@@ -68,6 +70,8 @@ $rows = Pegawai('', []);
                     </td>
                     <td><?= $row['nik'] ?></td>
                     <td><?= $row['nip'] ?></td>
+                    <td><?= $row['nama_unitkerja'] ?></td>
+                    <td><?= $row['nama_jabatan'] ?></td>
                     <td><?= $row['nama_pegawai'] ?></td>
                     <td><?= $row['status'] ?></td>
                   </tr>

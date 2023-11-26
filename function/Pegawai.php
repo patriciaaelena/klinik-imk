@@ -122,7 +122,9 @@ function Pegawai($type, $data)
       break;
 
     default:
-      $sql = "SELECT pg.*,jb.*,uk.nama_unitkerja FROM pegawai pg LEFT JOIN jabatan jb USING(id_jabatan) LEFT JOIN unit_kerja uk USING(id_unitkerja)";
+      $sql = "SELECT pg.*,jb.*,CONCAT(uk.nama_unitkerja, ' ', uk.nama_induk) nama_unitkerja FROM pegawai pg LEFT JOIN jabatan jb USING(id_jabatan) LEFT JOIN (
+                SELECT uk1.*, COALESCE(uk2.nama_unitkerja, '') nama_induk FROM unit_kerja uk1 LEFT JOIN unit_kerja uk2 ON uk1.id_induk=uk2.id_unitkerja
+              ) uk USING(id_unitkerja)";
       $result = mysqli_query($conn, $sql);
       $data = [];
       if (mysqli_num_rows($result) > 0)
