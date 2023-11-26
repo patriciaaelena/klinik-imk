@@ -230,7 +230,7 @@ $rows = [];
     <input type="hidden" name="hapus">
   </form>
 </section>
-<script>
+<!-- <script>
   const handleEdit = (id, name, unit, template, checked) => {
     $('#id_jabatan').val(id);
     $('#nama_jabatan').val(name);
@@ -269,8 +269,8 @@ $rows = [];
         $('#modal-edit').modal('show');
       <?php } ?>
     <?php } ?>
-  })
-</script>
+  });
+</script> -->
 <?php
 require_once('./foot.php');
 ?>
