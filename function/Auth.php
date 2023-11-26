@@ -40,6 +40,20 @@ function Auth($type, $data)
             'status' => 'success',
             'msg' => "Selamat datang " . ($row['id_pegawai'] !== NULL ? $row['nama_pegawai'] : $row['username']) . "!",
           ];
+          $sql = "SELECT * FROM tamplate_persetujuan 
+                  WHERE persetujuan_pertama='$row[id_jabatan]' 
+                    OR persetujuan_kedua='$row[id_jabatan]'";
+          $result = mysqli_query($conn, $sql);
+          $data = [];
+          if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+              $data[] = $row;
+            }
+            $_SESSION['auth']['sign'] = $data;
+            echo "asdasd";
+          }
+          // dd($data);
+          dd($_SESSION['auth']);
           return;
         }
       }
