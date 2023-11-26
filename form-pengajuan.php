@@ -1,15 +1,98 @@
 <?php
 $halaman = "cetak";
 require_once('function.php');
+require_once('./function/JenisCuti.php');
 require_once('./function/PengajuanCuti.php');
 if (!isset($_GET['id'])) {
   require_once('./404.php');
   die;
 }
+$rows = JenisCuti();
+$count = 1;
+$rowCount = 0;
+$temp = [];
+$taken = [];
+foreach ($rows as $row) {
+  if ($rowCount === 1) {
+    $temp[] = [
+      'id' => $row['id_jeniscuti'],
+      'nama' => ($count++) . " $row[nama_jeniscuti]",
+    ];
+    $taken[] = $temp;
+    $temp = [];
+    $rowCount = 0;
+  } else {
+    $temp[] = [
+      'id' => $row['id_jeniscuti'],
+      'nama' => ($count++) . " $row[nama_jeniscuti]",
+    ];
+    $rowCount++;
+  }
+}
 $pengajuan = PengajuanCuti('GET-ONE', ['id_pengajuan' => $_GET['id']]);
 if ($pengajuan == false) {
   require_once('./404.php');
   die;
+}
+$state = ['Disetujui', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'];
+$state1 = ['Disetujui', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'];
+$msg1 = ['<br>', '<br>', '<br>', '<br>'];
+$state2 = ['Disetujui', 'Perubahan', 'Ditangguhkan', 'Tidak Disetujui'];
+$msg2 = ['<br>', '<br>', '<br>', '<br>'];
+
+if ($pengajuan['ttd_pertama'] !== NULL) {
+  $idx = 0;
+  $state1 = array_map(function ($value): string {
+    global $idx, $msg1;
+    $msg1[$idx] = $value === "Disetujui" ? "&#x2714;" : "";
+    $idx++;
+    $v = strtoupper($value);
+    return ($value === "Disetujui" ? $v : "<del>$v</del>");
+  }, $state1);
+} else {
+  if ($pengajuan['status_pengajuan'] === 'Proses') {
+    $state1 = array_map(function ($value): string {
+      $v = strtoupper($value);
+      return ($v);
+    }, $state1);
+  } else {
+    $idx = 0;
+    $state1 = array_map(function ($value): string {
+      global $idx, $msg1, $pengajuan;
+      $msg1[$idx] = $value === $pengajuan['status_pengajuan'] ? $pengajuan['catatan_cuti'] : "";
+      $idx++;
+      $v = strtoupper($value);
+      return ($value === $pengajuan['status_pengajuan'] ? $v : "<del>$v</del>");
+    }, $state1);
+  }
+}
+if ($pengajuan['ttd_kedua'] !== NULL) {
+  $idx = 0;
+  $state2 = array_map(function ($value): string {
+    global $idx, $msg2;
+    $msg2[$idx] = $value === "Disetujui" ? "&#x2714;" : "";
+    $idx++;
+    $v = strtoupper($value);
+    return ($value === "Disetujui" ? $v : "<del>$v</del>");
+  }, $state2);
+} else {
+  if ($pengajuan['status_pengajuan'] === 'Proses') {
+    $state2 = array_map(function ($value): string {
+      $v = strtoupper($value);
+      return ($v);
+    }, $state2);
+  } else {
+    if ($pengajuan['ttd_pertama'] !== NULL) {
+      $idx = 0;
+      $state2 = array_map(function ($value): string {
+        global $idx, $msg2, $pengajuan;
+        $msg2[$idx] = $value === $pengajuan['status_pengajuan'] ? $pengajuan['catatan_cuti'] : "";
+        $idx++;
+        $v = strtoupper($value);
+        return ($value === $pengajuan['status_pengajuan'] ? $v : "<del>$v</del>");
+      }, $state2);
+    }
+  }
 }
 // foreach ($pengajuan as $key => $value) {
 //   var_dump($key, $value);
@@ -51,7 +134,7 @@ if ($pengajuan == false) {
         <table>
           <tr>
             <td class="no-padding">Palangka Raya,</td>
-            <td class="no-padding">11 Oktober 2023</td>
+            <td class="no-padding"><?= $fmt->format(strtotime($pengajuan['tanggal_modifikasi'])) ?></td>
           </tr>
           <tr>
             <td class="no-padding"></td>
@@ -59,7 +142,7 @@ if ($pengajuan == false) {
           </tr>
           <tr>
             <td class="no-padding text-center">Yth.</td>
-            <td class="no-padding">Kepala Biro Umum dan Keuangan</td>
+            <td class="no-padding"><?= $pengajuan['nama_kedua'] ?></td>
           </tr>
           <tr>
             <td class="no-padding"></td>
@@ -85,50 +168,54 @@ if ($pengajuan == false) {
         </tr>
         <tr>
           <td class="px-only-3 border border-dark">Nama</td>
-          <td class="px-only-3 border border-dark">Jokoasdad asdadas asdadas asdasd</td>
-          <td class="px-only-3 border border-dark">NIP.</td>
-          <td class="px-only-3 border border-dark">199912121212120001</td>
+          <td class="px-only-3 border border-dark"><?= $pengajuan['nama_pegawai'] ?></td>
+          <td class="px-only-3 border border-dark"><?= empty($pengajuan['nip']) ? "NIK" : "NIP" ?></td>
+          <td class="px-only-3 border border-dark"><?= empty($pengajuan['nip']) ? $pengajuan['nik'] : $pengajuan['nip'] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border border-dark">Jabatan</td>
-          <td class="px-only-3 border border-dark">Jabatan</td>
+          <td class="px-only-3 border border-dark"><?= $pengajuan['nama_jabatan'] ?></td>
           <td class="px-only-3 border border-dark cell-shrink">Masa Kerja</td>
-          <td class="px-only-3 border border-dark">Masa Kerja</td>
+          <?php
+          $date1 = new DateTime($pengajuan['mulai_kerja']);
+          $date2 = new DateTime();
+          $interval = $date1->diff($date2);
+          $d[] = $interval->y > 0 ? $interval->y . " tahun" : "";
+          $d[] = $interval->m > 0 ? $interval->m . " bulan" : "";
+          $d[] = $interval->d > 0 ? $interval->d . " hari" : "";
+          $tgl = [];
+          foreach ($d as $v) {
+            if (!empty($v)) {
+              $tgl[] = $v;
+            }
+          }
+          ?>
+          <td class="px-only-3 border border-dark"><?= implode(", ", $tgl) ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border border-dark cell-shrink">Unit Kerja</td>
-          <td class="px-only-3 border border-dark" colspan="3">Unit Kerja</td>
+          <td class="px-only-3 border border-dark" colspan="3"><?= $pengajuan['nama_unitkerja'] ?> Universitas Palangka Raya</td>
         </tr>
       </table>
       <table>
         <tr>
           <td class="px-only-3 border border-dark" colspan="4">II. JENIS CUTI YANG DIAMBIL **</td>
         </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">1. Cuti Tahunan</td>
-          <td class="px-only-3 border border-dark">V</td>
-          <td class="px-only-3 border border-dark">2. Cuti Besar</td>
-          <td class="px-only-3 border border-dark">V</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">1. Cuti Tahunan</td>
-          <td class="px-only-3 border border-dark">V</td>
-          <td class="px-only-3 border border-dark">2. Cuti Besar</td>
-          <td class="px-only-3 border border-dark">V</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">1. Cuti Tahunan</td>
-          <td class="px-only-3 border border-dark">V</td>
-          <td class="px-only-3 border border-dark">2. Cuti Besar</td>
-          <td class="px-only-3 border border-dark">V</td>
-        </tr>
+        <?php foreach ($taken as $row) { ?>
+          <tr>
+            <td class="px-only-3 border border-dark"><?= $row[0]['nama'] ?></td>
+            <td class="px-only-3 border border-dark text-center"><?= $row[0]['id'] === $pengajuan['id_jeniscuti'] ? "&#x2714;" : "" ?></td>
+            <td class="px-only-3 border border-dark"><?= $row[1]['nama'] ?></td>
+            <td class="px-only-3 border border-dark text-center"><?= $row[1]['id'] === $pengajuan['id_jeniscuti'] ? "&#x2714;" : "" ?></td>
+          </tr>
+        <?php } ?>
       </table>
       <table>
         <tr>
           <td class="px-only-3 border border-dark" colspan="4">III. ALASAN CUTI</td>
         </tr>
         <tr>
-          <td class="px-only-3 border border-dark">ALASAN</td>
+          <td class="px-only-3 border border-dark"><?= $pengajuan['alasan'] ?></td>
         </tr>
       </table>
       <table>
@@ -137,11 +224,11 @@ if ($pengajuan == false) {
         </tr>
         <tr>
           <td class="px-only-3 border border-dark cell-shrink">Selama</td>
-          <td class="px-only-3 border border-dark">1 hari</td>
+          <td class="px-only-3 border border-dark"><?= $pengajuan['lama_cuti'] ?> hari</td>
           <td class="px-only-3 border border-dark cell-shrink">mulai tanggal</td>
-          <td class="px-only-3 border border-dark">sekian2</td>
+          <td class="px-only-3 border border-dark"><?= $fmt->format(strtotime($pengajuan['mulai_cuti'])) ?></td>
           <td class="px-only-3 border border-dark cell-shrink">s/d</td>
-          <td class="px-only-3 border border-dark">sekian2</td>
+          <td class="px-only-3 border border-dark"><?= $fmt->format(strtotime($pengajuan['selesai_cuti'])) ?></td>
         </tr>
       </table>
       <table>
@@ -185,16 +272,16 @@ if ($pengajuan == false) {
       <table>
         <tr>
           <td class="px-only-3 border border-dark" colspan="2">VI. ALAMAT SELAMA MENJALANKAN CUTI</td>
-          <td class="px-only-3 border border-dark" colspan="2">ALAMAT SELAMA MENJALANKAN CUTI</td>
+          <td class="px-only-3 border border-dark" colspan="2"><?= $pengajuan['alamat_cuti'] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border border-dark"></td>
-          <td class="px-only-3 border border-dark cell-shrink" colspan="2">TELP. 0897678952312</td>
+          <td class="px-only-3 border border-dark cell-shrink" colspan="2">TELP. <?= $pengajuan['no_hp'] ?></td>
           <td class="px-only-3 border border-dark"></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="3">Hormat saya</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="3">Hormat saya</td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark"></td>
@@ -206,11 +293,11 @@ if ($pengajuan == false) {
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="3">Joko koaodkoasdj asdasd</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="3"><?= $pengajuan['nama_pegawai'] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline-end border-dark"></td>
-          <td class="px-only-3 border-inline-end border-dark" colspan="3">NIP. 12312312323424</td>
+          <td class="px-only-3 border-inline-end border-dark text-center" colspan="3">NIP. 12312312323424</td>
         </tr>
       </table>
       <table>
@@ -218,20 +305,18 @@ if ($pengajuan == false) {
           <td class="px-only-3 border border-dark" colspan="4">VII. PERTIMBANGAN ATASAN LANGSUNG **</td>
         </tr>
         <tr>
-          <td class="px-only-3 border border-dark">DISETUJUI</td>
-          <td class="px-only-3 border border-dark">PERUBAHAN ****</td>
-          <td class="px-only-3 border border-dark">DITANGGUHKAN ****</td>
-          <td class="px-only-3 border border-dark">TIDAK DI SETUJUI ****</td>
+          <?php foreach ($state1 as $key => $row) { ?>
+            <td class="px-only-3 border border-dark position-relative"><?= $row ?></td>
+          <?php } ?>
         </tr>
         <tr>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
+          <?php foreach ($msg1 as $key => $row) { ?>
+            <td class="px-only-3 border border-dark position-relative <?= $key == '0' ? "text-center" : "" ?>"><?= $row ?></td>
+          <?php } ?>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2">Hormat saya</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= explode(" - ", $pengajuan['jabatan_pertama'])[0] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
@@ -243,11 +328,11 @@ if ($pengajuan == false) {
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2">Joko koaodkoasdj asdasd</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= $pengajuan['nama_pertama'] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline-end border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline-end border-dark" colspan="2">NIP. 12312312323424</td>
+          <td class="px-only-3 border-inline-end border-dark text-center" colspan="2"><?= empty($pengajuan['nip_pertama']) ? "NIK." : "NIP." ?> <?= empty($pengajuan['nip_pertama']) ? $pengajuan['nik_pertama'] : $pengajuan['nip_pertama'] ?></td>
         </tr>
       </table>
       <table>
@@ -255,20 +340,18 @@ if ($pengajuan == false) {
           <td class="px-only-3 border border-dark" colspan="4">VIII. KEPUTUSAN PEJABAT YANG BERWENANG MEMBERIKAN CUTI **</td>
         </tr>
         <tr>
-          <td class="px-only-3 border border-dark">DISETUJUI</td>
-          <td class="px-only-3 border border-dark">PERUBAHAN ****</td>
-          <td class="px-only-3 border border-dark">DITANGGUHKAN ****</td>
-          <td class="px-only-3 border border-dark">TIDAK DI SETUJUI ****</td>
+          <?php foreach ($state2 as $key => $row) { ?>
+            <td class="px-only-3 border border-dark position-relative"><?= $row ?></td>
+          <?php } ?>
         </tr>
         <tr>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
-          <td class="px-only-3 border border-dark"><br></td>
+          <?php foreach ($msg2 as $key => $row) { ?>
+            <td class="px-only-3 border border-dark position-relative <?= $key == '0' ? "text-center" : "" ?>"><?= $row ?></td>
+          <?php } ?>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2">Hormat saya</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= explode(" - ", $pengajuan['jabatan_kedua'])[0] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
@@ -280,11 +363,11 @@ if ($pengajuan == false) {
         </tr>
         <tr>
           <td class="px-only-3 border-inline border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline border-dark" colspan="2">Joko koaodkoasdj asdasd</td>
+          <td class="px-only-3 border-inline border-dark text-center" colspan="2"><?= $pengajuan['nama_kedua'] ?></td>
         </tr>
         <tr>
           <td class="px-only-3 border-inline-end border-dark" colspan="2"></td>
-          <td class="px-only-3 border-inline-end border-dark" colspan="2">NIP. 12312312323424</td>
+          <td class="px-only-3 border-inline-end border-dark text-center" colspan="2"><?= empty($pengajuan['nip_kedua']) ? "NIK." : "NIP." ?> <?= empty($pengajuan['nip_kedua']) ? $pengajuan['nik_kedua'] : $pengajuan['nip_kedua'] ?></td>
         </tr>
       </table>
     </main>
