@@ -79,6 +79,7 @@ function Kalkulasi($type, $data)
           'tahun' => $key,
           'sisa' => $value['jml_sisa'],
           'ket' => '-',
+          'jml' => $value['jml_hari'],
         ];
       }
       array_unshift($new, ['Tahun', 'Sisa', 'Keterangan']);

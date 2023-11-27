@@ -44,3 +44,11 @@ if (!isset($halaman)) {
     </p>
   </a>
 </li>
+<li class="nav-item">
+  <a href="<?= $halaman === 'Riwayat Pengajuan Cuti' ? 'javascript:void(0)' : './riwayat-pengajuan-cuti' ?>" class="nav-link <?= $halaman === 'Riwayat Pengajuan Cuti' ? 'active' : '' ?>">
+    <i class="nav-icon fas fa-tachometer-alt"></i>
+    <p>
+      Riwayat Pengajuan Cuti
+    </p>
+  </a>
+</li>

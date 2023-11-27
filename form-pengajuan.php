@@ -246,6 +246,7 @@ $lain = Kalkulasi('OTHER-FORM', [
             <?php if (count($tahunan[$i]) < 3) { ?>
               <td class="px-only-3 border border-dark" colspan="3"><?= $tahunan[$i][0] ?></td>
             <?php } else { ?>
+              <?php unset($tahunan[$i]['jml']); ?>
               <?php foreach ($tahunan[$i] as $key => $val) { ?>
                 <td class="px-only-3 border border-dark"><?= $key === "1" ? strtoupper($val) : $val ?><?= $key === "sisa"  ? " hari" : "" ?></td>
               <?php } ?>

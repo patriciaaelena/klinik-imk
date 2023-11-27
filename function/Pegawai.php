@@ -105,7 +105,20 @@ function Pegawai($type, $data)
       }
       break;
 
-    case 'DELETE':
+    case 'GET':
+      $sql = "SELECT * FROM pengguna pa 
+                LEFT JOIN pegawai pi USING(id_pegawai)
+                LEFT JOIN jabatan jb USING(id_jabatan)
+                LEFT JOIN unit_kerja uk USING(id_unitkerja)
+                  WHERE id_pegawai = '$data[id_pegawai]'";
+      $result = mysqli_query($conn, $sql);
+      if (mysqli_num_rows($result) === 1) {
+        return mysqli_fetch_assoc($result);
+      }
+      return false;
+      break;
+
+    case 'GET':
       $sql = "DELETE FROM jabatan WHERE id_jabatan = '$data[id_jabatan]'";
       $result = mysqli_query($conn, $sql);
       if (mysqli_affected_rows($conn) > 0) {

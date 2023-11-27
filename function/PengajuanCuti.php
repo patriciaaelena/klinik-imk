@@ -243,7 +243,17 @@ function PengajuanCuti($type, $data)
         $arrCondition[] = "$key='$val'";
       }
       $where = count($arrCondition) > 0 ? " WHERE " . implode(' AND ', $arrCondition) : "";
-      $sql = "SELECT * FROM pengajuan_cuti JOIN jenis_cuti USING(id_jeniscuti) $where ORDER BY tanggal_modifikasi DESC";
+      $sql = "SELECT * FROM pengajuan_cuti 
+              JOIN jenis_cuti USING(id_jeniscuti) 
+              JOIN pegawai pg USING(id_pegawai) 
+              JOIN jabatan jb USING(id_jabatan)
+              JOIN (
+                SELECT uk1.id_unitkerja, CONCAT(uk1.nama_unitkerja,' ',COALESCE(uk2.nama_unitkerja, '')) nama_unitkerja
+                FROM unit_kerja uk1 LEFT JOIN unit_kerja uk2 ON uk1.id_induk=uk2.id_unitkerja
+              ) uk USING(id_unitkerja)
+              JOIN tamplate_persetujuan USING(id_tamplate)
+                $where
+                ORDER BY tanggal_modifikasi DESC";
       $result = mysqli_query($conn, $sql);
       $data = [];
       if (mysqli_num_rows($result) > 0)

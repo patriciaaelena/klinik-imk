@@ -3,6 +3,8 @@ $halaman = 'Detail Pegawai';
 require_once('./head.php');
 require_once('./function/Jabatan.php');
 require_once('./function/Pegawai.php');
+require_once('./function/Kalkulasi.php');
+require_once('./function/PengajuanCuti.php');
 if (!isset($_GET['id']) || empty($_GET['id'])) {
   header("Location: ./pegawai");
   die;
@@ -11,14 +13,25 @@ if ($_SESSION['auth']['role'] != '0') {
   require_once('./401.php');
   die;
 }
-if (isset($_POST['tambah'])) {
-  unset($_POST['tambah']);
-  Pegawai('CREATE', $_POST);
-  header("Refresh:0");
+$single = Pegawai('GET', ['id_pegawai' => $_GET['id']]);
+$rows = PengajuanCuti('', ['id_pegawai' => $_GET['id']]);
+if ($single === false) {
+  $_SESSION['flash'] = [
+    'status' => 'error',
+    'msg' => 'Pegawai tidak ditemukan!',
+  ];
+  header("Location: ./pegawai");
   die;
 }
-$select = Jabatan('GET-FREE', []);
-$rows = Pegawai('', []);
+$tahunan = Kalkulasi('TAHUNAN-FORM', [
+  'id_pegawai' => $_GET['id'],
+  'tanggal_modifikasi' => date("Y-m-d"),
+]);
+$lain = Kalkulasi('OTHER-FORM', [
+  'id_pegawai' => $_GET['id'],
+  'tanggal_modifikasi' => date("Y-m-d"),
+]);
+$halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip']) ? $single['nik'] : $single['nip']);
 ?>
 <div class="content-header">
   <div class="container-fluid">
@@ -41,15 +54,130 @@ $rows = Pegawai('', []);
 <section class="content">
   <div class="container-fluid">
     <div class="row">
+      <div class="col-12 col-xl-6">
+        <!-- Horizontal Form -->
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">Data Diri</h3>
+          </div>
+          <!-- form start -->
+          <div class="form-horizontal">
+            <div class="card-body">
+              <div class="d-flex flex-column">
+                <!-- <img src="http://kkn.upr.ac.id/upload/foto/203030503101.png" class="img-thumbnail" width="200px"> -->
+                <div class="col d-flex flex-column">
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">Nama</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['nama_pegawai'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">NIK</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['nik'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">NIP</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['nip'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">Jabatan</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['nama_jabatan'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">Unit Kerja</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['nama_unitkerja'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">Masa Kerja</label>
+                    <div class="col-9">
+                      <?php
+                      $date1 = new DateTime($single['mulai_kerja']);
+                      $date2 = new DateTime();
+                      $interval = $date1->diff($date2);
+                      $d[] = $interval->y > 0 ? $interval->y . " tahun" : "";
+                      $d[] = $interval->m > 0 ? $interval->m . " bulan" : "";
+                      $d[] = $interval->d > 0 ? $interval->d . " hari" : "";
+                      $tgl = [];
+                      foreach ($d as $v) {
+                        if (!empty($v)) {
+                          $tgl[] = $v;
+                        }
+                      }
+                      ?>
+                      <input type="text" class="form-control" readonly value="<?= implode(", ", $tgl) ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">No HP</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['no_hp'] ?>">
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center form-group">
+                    <label for="inputEmail3" class="form-label col-3">Status</label>
+                    <div class="col-9">
+                      <input type="text" class="form-control" readonly value="<?= $single['status'] ?>">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+
+      </div>
+      <div class="col-12 col-xl-6">
+        <!-- Horizontal Form -->
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">
+              Catatan Cuti (per tanggal <?= $fmt->format(strtotime(date('Y-m-d'))) ?>)
+            </h3>
+          </div>
+          <!-- form start -->
+          <div class="card-body">
+            <table class="table table-striped table-hover table-bordered">
+              <tbody>
+                <?php for ($i = 0; $i < 5; $i++) {
+                ?>
+                  <tr>
+                    <?php if (count($tahunan[$i]) < 3) { ?>
+                      <td class="px-only-3" colspan="3"><?= $tahunan[$i][0] ?></td>
+                    <?php } else { ?>
+                      <?php unset($tahunan[$i]['ket']); ?>
+                      <?php foreach ($tahunan[$i] as $key => $val) { ?>
+                        <td class="px-only-3"><?= $val === "Keterangan" ? "Jumlah Cuti" : $val ?><?= in_array($key, ['sisa', 'jml'])  ? " hari" : "" ?></td>
+                      <?php } ?>
+                    <?php } ?>
+                    <?php foreach ($lain[$i] as $key => $val) { ?>
+                      <td class="px-only-3"><?= $val ?><?= $key === "jml_hari"  ? " hari" : "" ?></td>
+                    <?php } ?>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+
+      </div>
+    </div>
+    <div class="row">
       <div class="col">
         <div class="card card-info">
           <div class="card-header">
-            <h3 class="card-title">Daftar Pegawai</h3>
-            <div class="float-sm-right">
-              <button class="btn btn-secondary rounded-circle" data-toggle="modal" data-target="#modal-add">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
+            <h3 class="card-title">Riwayat Pengajuan Cuti</h3>
           </div>
           <div class="card-body p-3">
             <table id="main-table" class="table table-bordered table-striped">
@@ -57,10 +185,11 @@ $rows = Pegawai('', []);
                 <tr>
                   <th style="width: 30px">No</th>
                   <th style="width: 40px">Aksi</th>
-                  <th style="width: 120px">NIK</th>
-                  <th style="width: 120px">NIP</th>
-                  <th>Nama Pegawai</th>
-                  <th style="width: 50px">Status</th>
+                  <th style="width: 120px">Jenis Cuti</th>
+                  <th style="width: 120px">Tanggal Pengajuan</th>
+                  <th style="width: 120px">Mulai Cuti</th>
+                  <th style="width: 120px">Lama Cuti</th>
+                  <th style="width: 50px">Status Pengajuan</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,12 +200,17 @@ $rows = Pegawai('', []);
                   <tr>
                     <td><?= $i++ ?></td>
                     <td>
-                      <a class="btn btn-sm btn-primary" href=""><i class="fas fa-eye"></i></a>
+                      <a class="btn btn-sm btn-primary" href="./detail-cuti-pegawai?pg=<?= $_GET['id'] ?>&id=<?= $row['id_pengajuan'] ?>"><i class="fas fa-eye"></i></a>
                     </td>
-                    <td><?= $row['nik'] ?></td>
-                    <td><?= $row['nip'] ?></td>
-                    <td><?= $row['nama_pegawai'] ?></td>
-                    <td><?= $row['status'] ?></td>
+                    <td><?= $row['nama_jeniscuti'] ?></td>
+                    <td><?= $fmt->format(strtotime($row['tanggal_modifikasi'])) ?></td>
+                    <td><?= $fmt->format(strtotime($row['mulai_cuti'])) ?></td>
+                    <td><?= $row['lama_cuti'] . " hari" ?></td>
+                    <td>
+                      <div class="bg-<?= $row['status_pengajuan'] === 'Proses' ? "warning" : ($row['status_pengajuan'] === 'Disetujui' ? "success" : ($row['status_pengajuan'] === 'Tidak Disetujui' ? "danger" : "secondary")) ?> rounded-pill text-center mx-3 py-1">
+                        <?= $row['status_pengajuan'] ?>
+                      </div>
+                    </td>
                   </tr>
                 <?php
                 }
@@ -88,70 +222,6 @@ $rows = Pegawai('', []);
       </div>
     </div>
   </div>
-  <?php
-  $add = [];
-  $edit = [];
-  if (isset($_SESSION['flash']['type'])) {
-    if ($_SESSION['flash']['type'] === 'ADD') {
-      $add['nama_jabatan'] = " value='" . $_SESSION['flash']['data']['nama_jabatan'] . "'";
-      $add['id_unitkerja'] = " value='" . $_SESSION['flash']['data']['id_unitkerja'] . "'";
-    } else {
-      $edit['id_pegawai'] = " value='" . $_SESSION['flash']['data']['id_pegawai'] . "'";
-      $edit['nama_jabatan'] = " value='" . $_SESSION['flash']['data']['nama_jabatan'] . "'";
-      $edit['id_unitkerja'] = " value='" . $_SESSION['flash']['data']['id_unitkerja'] . "'";
-    }
-  }
-  ?>
-  <!-- Modal Add -->
-  <div class="modal fade" id="modal-add" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Tambah Pegawai</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form class="needs-validation" novalidate method="post">
-          <div class="modal-body">
-            <div class="col pb-3">
-              <label for="nama_jabatan1" class="form-label">Nama Pegawai</label>
-              <input type="text" class="form-control" id="nama_jabatan1" name="nama_jabatan" <?= $add['nama_jabatan'] ?? '' ?> required>
-              <div class="invalid-feedback">
-                Harus diisi
-              </div>
-            </div>
-            <div class="col pb-3">
-              <label for="id_unitkerja" class="form-label">Unit Kerja</label>
-              <select class="form-select form-select custom-select rounded-0" id="id_unitkerja1" name="id_unitkerja" <?= $add['id_unitkerja'] ?? '' ?> required>
-                <option value="" selected disabled>Pilih Unit Kerja</option>
-                <?php foreach ($select as $row) { ?>
-                  <option value="<?= $row['id_unitkerja'] ?>"><?= $row['nama_unitkerja'] ?></option>
-                <?php } ?>
-              </select>
-              <div class="invalid-feedback">
-                Harus dipilih
-              </div>
-            </div>
-            <div class="col pb-3">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" name="hanya_satu" class="custom-control-input" id="hanya_satu1">
-                <label class="custom-control-label" for="hanya_satu1">Hanya satu pejabat?</label>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary" name="tambah">Simpan</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <form method="post" class="d-inline" id="form-delete">
-    <input type="hidden" name="id_jabatan" id="delete-id">
-    <input type="hidden" name="hapus">
-  </form>
 </section>
 <script>
   $(document).ready(() => {
