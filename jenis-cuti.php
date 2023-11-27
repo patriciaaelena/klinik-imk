@@ -31,8 +31,8 @@ $rows = JenisCuti();
           <div class="card-header">
             <h3 class="card-title">Daftar Jenis Cuti</h3>
           </div>
-          <div class="card-body p-3">
-            <table class="table  table-striped">
+          <div class="card-body p-3 table-responsive">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th style="width: 60px">No</th>

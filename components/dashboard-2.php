@@ -144,7 +144,7 @@ $lain = Kalkulasi('OTHER-FORM', [
           </h3>
         </div>
         <!-- form start -->
-        <div class="card-body">
+        <div class="card-body table-responsive">
           <table class="table table-striped table-hover table-bordered">
             <tbody>
               <?php for ($i = 0; $i < 5; $i++) {

@@ -42,6 +42,13 @@ $user = $_SESSION['auth'];
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+  <div class="prevent-non-desktop flex-column justify-content-center align-items-center gap-5">
+    <img class="animation__wobble drop-shadow" src="./dist/img/upr.png" alt="UPRLogo" height="100" width="100">
+    <div>
+      <h3 class="text-center">Eiiittttsss gabisa, Hehehe.</h3>
+      <h3 class="text-center">Pake desktop yaaa...</h3>
+    </div>
+  </div>
   <div class="wrapper">
     <nav class="main-header navbar navbar-expand navbar-dark bg-lightblue">
       <ul class="navbar-nav">
@@ -107,6 +114,6 @@ $user = $_SESSION['auth'];
       </div>
     </aside>
     <div class="content-wrapper">
-      <!-- <div class="preloader flex-column justify-content-center align-items-center">
+      <div class="preloader flex-column justify-content-center align-items-center">
         <img class="animation__wobble drop-shadow" src="./dist/img/upr.png" alt="UPRLogo" height="100" width="100">
-      </div> -->
+      </div>

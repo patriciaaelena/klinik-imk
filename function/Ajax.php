@@ -21,7 +21,7 @@ function Ajax($type, $data)
         $result = mysqli_query($conn, $sql);
         $res = $result ? mysqli_fetch_assoc($result) : [];
 ?>
-        <div class="col px-2 mb-3 border">
+        <div class="col px-2 mb-3 border table-responsive">
           <table class="table table-sm table-borderless">
             <tr>
               <td colspan="2"><strong><?= $jenisCuti['nama_jeniscuti'] ?></strong></td>
@@ -86,7 +86,7 @@ function Ajax($type, $data)
       }
       $dataCuti['data'] = $cutiTahunan;
       ?>
-      <div class="col px-2 mb-3 border">
+      <div class="col px-2 mb-3 border table-responsive">
         <table class="table table-sm table-borderless">
           <tr>
             <td colspan="3"><strong><?= $dataCuti['nama_jeniscuti'] ?></strong></td>

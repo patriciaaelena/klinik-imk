@@ -55889,4 +55889,29 @@ input::-webkit-outer-spin-button {
   gap: 3rem !important;
 }
 
+.prevent-non-desktop {
+  display: none;
+  background-color: #f4f6f9;
+  height: 100%;
+  width: 100%;
+  transition: height 200ms linear;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99999;
+}
+
+@media (max-width: 780px) {
+  /* .wrapper {
+    display: none !important;
+  } */
+
+  .prevent-non-desktop {
+    display: -ms-flexbox !important;
+    display: flex !important;
+  }
+}
+
 /*# sourceMappingURL=adminlte.css.map */

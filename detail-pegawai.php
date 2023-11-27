@@ -31,7 +31,6 @@ $lain = Kalkulasi('OTHER-FORM', [
   'id_pegawai' => $_GET['id'],
   'tanggal_modifikasi' => date("Y-m-d"),
 ]);
-$halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip']) ? $single['nik'] : $single['nip']);
 ?>
 <div class="content-header">
   <div class="container-fluid">
@@ -44,6 +43,7 @@ $halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip
           <li class="breadcrumb-item">
             <a href="./pegawai">Pegawai</a>
           </li>
+          <?php $halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip']) ? $single['nik'] : $single['nip']); ?>
           <li class="breadcrumb-item active"><?= $halaman ?></li>
         </ol>
       </div>
@@ -145,7 +145,7 @@ $halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip
             </h3>
           </div>
           <!-- form start -->
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table class="table table-striped table-hover table-bordered">
               <tbody>
                 <?php for ($i = 0; $i < 5; $i++) {
@@ -170,7 +170,6 @@ $halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip
           </div>
         </div>
         <!-- /.card -->
-
       </div>
     </div>
     <div class="row">
@@ -179,8 +178,8 @@ $halaman = (empty($single['nip']) ? "NIK." : "NIP.") . " " . (empty($single['nip
           <div class="card-header">
             <h3 class="card-title">Riwayat Pengajuan Cuti</h3>
           </div>
-          <div class="card-body p-3">
-            <table id="main-table" class="table table-bordered table-striped">
+          <div class="card-body p-3 table-responsive">
+            <table id="main-table" class="table table-bordered table-striped" style="width:100%">
               <thead>
                 <tr>
                   <th style="width: 30px">No</th>

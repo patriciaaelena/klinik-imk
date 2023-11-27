@@ -44,8 +44,8 @@ $rows = Pegawai('', []);
               </button>
             </div>
           </div>
-          <div class="card-body p-3">
-            <table id="main-table" class="table table-bordered table-striped">
+          <div class="card-body p-3 table-responsive">
+            <table id="main-table" class="table table-bordered table-striped" style="width:100%">
               <thead>
                 <tr>
                   <th style="width: 25px">No</th>

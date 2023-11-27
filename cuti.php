@@ -119,7 +119,7 @@ if ($template['id_tamplate'] !== NULL && $template['nama_pertama'] !== NULL && $
                       </div>
                     </div>
                   </div>
-                  <div class="col px-2 mb-3 border">
+                  <div class="col px-2 mb-3 border table-responsive">
                     <table class="table text-center table-borderless table-sm">
                       <tr>
                         <td>Persetujuan Pertama</td>
