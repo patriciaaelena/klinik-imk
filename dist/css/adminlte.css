@@ -55889,6 +55889,10 @@ input::-webkit-outer-spin-button {
   gap: 3rem !important;
 }
 
+iframe {
+  border: none;
+}
+
 .prevent-non-desktop {
   display: none;
   background-color: #f4f6f9;
@@ -55904,9 +55908,9 @@ input::-webkit-outer-spin-button {
 }
 
 @media (max-width: 780px) {
-  /* .wrapper {
+  .wrapper {
     display: none !important;
-  } */
+  }
 
   .prevent-non-desktop {
     display: -ms-flexbox !important;

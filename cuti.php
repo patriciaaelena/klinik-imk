@@ -261,7 +261,7 @@ if ($template['id_tamplate'] !== NULL && $template['nama_pertama'] !== NULL && $
         <div class="row">
           <div class="col">
             <div class="card p-3 no-border position-relative">
-              <embed src="./form-pengajuan.php?id=<?= $pengajuan['id_pengajuan'] ?>&iframe=1" title="W3Schools Free Online Web Tutorials" height="500px" class="rounded" type="application/pdf"></embed>
+              <iframe src="./form-pengajuan.php?id=<?= $pengajuan['id_pengajuan'] ?>&iframe=1" title="W3Schools Free Online Web Tutorials" height="500px" class="rounded border-none" type="application/pdf"></iframe>
               <a href="./form-pengajuan.php?id=<?= $pengajuan['id_pengajuan'] ?>" target="_blank" class="btn btn-success position-absolute"><i class="fas fa-print"></i></a>
             </div>
           </div>
