@@ -1,14 +1,14 @@
 <?php
-$halaman = "cetak";
-require_once('function.php');
-require_once('./function/JenisCuti.php');
-require_once('./function/PengajuanCuti.php');
 if (!isset($_GET['id'])) {
   require_once('./404.php');
   die;
 }
+$halaman = "cetak";
+require_once('function.php');
+require_once('./function/JenisCuti.php');
+require_once('./function/PengajuanCuti.php');
+require_once('./function/Kalkulasi.php');
 $rows = JenisCuti();
-$count = 1;
 $rowCount = 0;
 $temp = [];
 $taken = [];
@@ -16,7 +16,7 @@ foreach ($rows as $row) {
   if ($rowCount === 1) {
     $temp[] = [
       'id' => $row['id_jeniscuti'],
-      'nama' => ($count++) . " $row[nama_jeniscuti]",
+      'nama' => "$row[id_jeniscuti]. $row[nama_jeniscuti]",
     ];
     $taken[] = $temp;
     $temp = [];
@@ -24,7 +24,7 @@ foreach ($rows as $row) {
   } else {
     $temp[] = [
       'id' => $row['id_jeniscuti'],
-      'nama' => ($count++) . " $row[nama_jeniscuti]",
+      'nama' => "$row[id_jeniscuti]. $row[nama_jeniscuti]",
     ];
     $rowCount++;
   }
@@ -95,10 +95,14 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
     }
   }
 }
-// foreach ($pengajuan as $key => $value) {
-//   var_dump($key, $value);
-//   echo '<br>';
-// }
+$tahunan = Kalkulasi('TAHUNAN-FORM', [
+  'id_pegawai' => $pengajuan['id_pegawai'],
+  'tanggal_modifikasi' => $pengajuan['tanggal_modifikasi'],
+]);
+$lain = Kalkulasi('OTHER-FORM', [
+  'id_pegawai' => $pengajuan['id_pegawai'],
+  'tanggal_modifikasi' => $pengajuan['tanggal_modifikasi'],
+]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -236,39 +240,22 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
         <tr>
           <td class="px-only-3 border border-dark" colspan="5">V. CATATAN CUTI</td>
         </tr>
-        <tr>
-          <td class="px-only-3 border border-dark" colspan="3">1. CUTI TAHUNAN</td>
-          <td class="px-only-3 border border-dark">2. CUTI BESAR</td>
-          <td class="px-only-3 border border-dark">2. CUTI BESAR</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark cell-shrink">Tahun</td>
-          <td class="px-only-3 border border-dark cell-shrink">Sisa</td>
-          <td class="px-only-3 border border-dark">Keterangan</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">2023</td>
-          <td class="px-only-3 border border-dark">6</td>
-          <td class="px-only-3 border border-dark">Keterangan</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">2023</td>
-          <td class="px-only-3 border border-dark">6</td>
-          <td class="px-only-3 border border-dark">Keterangan</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-        </tr>
-        <tr>
-          <td class="px-only-3 border border-dark">2023</td>
-          <td class="px-only-3 border border-dark">6</td>
-          <td class="px-only-3 border border-dark">Keterangan</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-          <td class="px-only-3 border border-dark">3. CUTI SAKIT</td>
-        </tr>
+        <?php for ($i = 0; $i < 5; $i++) {
+        ?>
+          <tr>
+            <?php if (count($tahunan[$i]) < 3) { ?>
+              <td class="px-only-3 border border-dark" colspan="3"><?= $tahunan[$i][0] ?></td>
+            <?php } else { ?>
+              <?php foreach ($tahunan[$i] as $key => $val) { ?>
+                <td class="px-only-3 border border-dark"><?= $key === "1" ? strtoupper($val) : $val ?><?= $key === "sisa"  ? " hari" : "" ?></td>
+              <?php } ?>
+            <?php } ?>
+            <?php foreach ($lain[$i] as $key => $val) { ?>
+              <td class="px-only-3 border border-dark"><?= strtoupper($val) ?><?= $key === "jml_hari"  ? " hari" : "" ?></td>
+            <?php } ?>
+          </tr>
+        <?php
+        } ?>
       </table>
       <table>
         <tr>
@@ -366,32 +353,32 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
           <td class="px-only-3" colspan="2">Catatan :</td>
         </tr>
         <tr>
-          <td class="px-only-3">****</td>
+          <td class="px-only-3">*</td>
+          <td class="px-only-3">coret yang tidak perlu</td>
+        </tr>
+        <tr>
+          <td class="px-only-3">**</td>
+          <td class="px-only-3">Pilih salah satu dengan member tanda centang ( { )</td>
+        </tr>
+        <tr>
+          <td class="px-only-3">***</td>
           <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
         </tr>
         <tr>
           <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
+          <td class="px-only-3">di beri tanda centang dan alasannya</td>
         </tr>
         <tr>
-          <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
+          <td class="px-only-3">N-</td>
+          <td class="px-only-3">= Cuti Tahunan berjalan</td>
         </tr>
         <tr>
-          <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
+          <td class="px-only-3">N- 1</td>
+          <td class="px-only-3">= Sisa cuti I tahun sebelumnya</td>
         </tr>
         <tr>
-          <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
-        </tr>
-        <tr>
-          <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
-        </tr>
-        <tr>
-          <td class="px-only-3">****</td>
-          <td class="px-only-3">diisi oleh pejabat yang menangani bidang kepegawaian sebelum PNS mengajukan cuti</td>
+          <td class="px-only-3">N- 2</td>
+          <td class="px-only-3">= Sisa cuti 2 tahun sebelumnya</td>
         </tr>
       </table>
       <div class="logo-footer d-flex align-items-center">

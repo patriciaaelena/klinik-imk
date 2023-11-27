@@ -17,7 +17,7 @@ function Ajax($type, $data)
           LEFT JOIN pengajuan_cuti pc USING (id_jeniscuti) 
             WHERE id_jeniscuti='$data[id_jeniscuti]'
               AND (id_pegawai='$user[id_pegawai]' OR id_pegawai IS NULL) 
-              AND (status='Disetujui' OR status IS NULL) GROUP BY id_jeniscuti";
+              AND (status_pengajuan='Disetujui' OR status_pengajuan IS NULL) GROUP BY id_jeniscuti";
         $result = mysqli_query($conn, $sql);
         $res = $result ? mysqli_fetch_assoc($result) : [];
 ?>
@@ -49,7 +49,7 @@ function Ajax($type, $data)
             WHERE id_jeniscuti='$data[id_jeniscuti]' 
               AND (id_pegawai='$user[id_pegawai]' OR id_pegawai IS NULL) 
               AND (YEAR(tanggal_modifikasi) IN ($implodeYears) OR YEAR(tanggal_modifikasi) IS NULL) 
-              AND (status='Disetujui' OR status IS NULL) GROUP BY YEAR(tanggal_modifikasi)";
+              AND (status_pengajuan='Disetujui' OR status_pengajuan IS NULL) GROUP BY YEAR(tanggal_modifikasi)";
       $result = mysqli_query($conn, $sql);
       $dataCuti =  [
         'nama_jeniscuti' => $jenisCuti['nama_jeniscuti'],

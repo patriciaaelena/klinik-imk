@@ -67,6 +67,9 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <a href="./riwayat-cuti">Riwayat Pengajuan Cuti</a>
+          </li>
           <li class="breadcrumb-item active"><?= $halaman ?></li>
         </ol>
       </div>
