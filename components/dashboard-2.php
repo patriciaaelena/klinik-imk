@@ -55,6 +55,9 @@ $lain = Kalkulasi('OTHER-FORM', [
     <div class="col-12 col-xl-6">
       <!-- Horizontal Form -->
       <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">Data Diri</h3>
+        </div>
         <!-- form start -->
         <div class="form-horizontal">
           <div class="card-body">
@@ -133,20 +136,16 @@ $lain = Kalkulasi('OTHER-FORM', [
     </div>
     <div class="col-12 col-xl-6">
       <!-- Horizontal Form -->
+      <!-- Horizontal Form -->
       <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">
+            Catatan Cuti (per tanggal <?= $fmt->format(strtotime(date('Y-m-d'))) ?>)
+          </h3>
+        </div>
         <!-- form start -->
         <div class="card-body">
           <table class="table table-striped table-hover table-bordered">
-            <thead>
-              <tr>
-                <th class="px-only-3" colspan="5">
-                  <div class="d-flex justify-content-between">
-                    <span>Catatan Cuti</span>
-                    <span>(per tanggal <?= $fmt->format(strtotime(date('Y-m-d'))) ?>)</span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
             <tbody>
               <?php for ($i = 0; $i < 5; $i++) {
               ?>
@@ -154,8 +153,9 @@ $lain = Kalkulasi('OTHER-FORM', [
                   <?php if (count($tahunan[$i]) < 3) { ?>
                     <td class="px-only-3" colspan="3"><?= $tahunan[$i][0] ?></td>
                   <?php } else { ?>
+                    <?php unset($tahunan[$i]['ket']); ?>
                     <?php foreach ($tahunan[$i] as $key => $val) { ?>
-                      <td class="px-only-3"><?= $val ?><?= $key === "sisa"  ? " hari" : "" ?></td>
+                      <td class="px-only-3"><?= $val === "Keterangan" ? "Jumlah Cuti" : $val ?><?= in_array($key, ['sisa', 'jml'])  ? " hari" : "" ?></td>
                     <?php } ?>
                   <?php } ?>
                   <?php foreach ($lain[$i] as $key => $val) { ?>
