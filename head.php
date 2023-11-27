@@ -17,6 +17,12 @@ $user = $_SESSION['auth'];
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistem Informasi Pengajuan Cuti di Universitas Palangka Raya">
+  <meta name="name" content="Sistem Informasi Cuti">
+  <meta name='og:title' content='Login | Sistem Informasi Cuti'>
+  <meta name='og:image' content='./dist/img/upr.png'>
+  <meta name='og:site_name' content='Sistem Informasi Cuti'>
+  <meta name='og:description' content='Sistem Informasi Pengajuan Cuti di Universitas Palangka Raya'>
   <link href="./dist/img/upr.png" rel="icon">
   <title><?= $halaman ?> | Sistem Informasi Cuti</title>
 
