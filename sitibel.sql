@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2023 at 05:36 PM
+-- Generation Time: Nov 28, 2023 at 11:59 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -62,10 +62,10 @@ CREATE TABLE `jenis_cuti` (
 
 INSERT INTO `jenis_cuti` (`id_jeniscuti`, `nama_jeniscuti`) VALUES
 (1, 'Cuti Tahunan'),
-(2, 'Cuti Sakit'),
-(3, 'Cuti Besar'),
-(4, 'Cuti Karena Alasan Penting'),
-(5, 'Cuti Melahirkan'),
+(2, 'Cuti Besar'),
+(3, 'Cuti Sakit'),
+(4, 'Cuti Melahirkan'),
+(5, 'Cuti Karena Alasan Penting'),
 (6, 'Cuti Diluar Tanggungan Negara');
 
 -- --------------------------------------------------------
@@ -78,8 +78,8 @@ CREATE TABLE `pegawai` (
   `id_pegawai` int(11) NOT NULL,
   `nama_pegawai` varchar(50) NOT NULL,
   `id_jabatan` int(11) NOT NULL,
-  `nip` varchar(20) NOT NULL,
-  `nik` varchar(20) NOT NULL,
+  `nip` varchar(20) DEFAULT NULL,
+  `nik` varchar(20) DEFAULT NULL,
   `mulai_kerja` date DEFAULT NULL,
   `no_hp` varchar(16) DEFAULT NULL,
   `status` varchar(16) NOT NULL
@@ -90,10 +90,12 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id_pegawai`, `nama_pegawai`, `id_jabatan`, `nip`, `nik`, `mulai_kerja`, `no_hp`, `status`) VALUES
-(4, 'Harits', 2, '1234567890', '3314082011990005', NULL, NULL, 'PNS'),
-(5, 'Joko Asmoro', 1, '', '3312', '2014-11-06', NULL, 'TEKON'),
+(4, 'Harits', 2, '1234567890', '3314082011990005', '2014-11-06', NULL, 'PNS'),
+(5, 'Joko Asmoro', 1, NULL, '3312', '2014-11-06', NULL, 'TEKON'),
 (6, 'Kepala', 1, '1234', '1234', '2023-11-02', NULL, 'PNS'),
-(7, 'BUK', 3, '12345', '12345', '2023-11-08', NULL, 'PNS');
+(7, 'BUK', 3, '12345', '12345', '2023-11-08', NULL, 'PNS'),
+(8, 'Patricia Elena Putri', 1, NULL, '671008', '2020-08-23', NULL, 'TEKON'),
+(13, 'asdasdasd', 1, NULL, '234234', '2023-11-15', NULL, 'TEKON');
 
 -- --------------------------------------------------------
 
@@ -111,7 +113,6 @@ CREATE TABLE `pengajuan_cuti` (
   `selesai_cuti` date DEFAULT NULL,
   `catatan_cuti` text NOT NULL,
   `alamat_cuti` text NOT NULL,
-  `no_hp` varchar(16) NOT NULL,
   `ttd_pertama` date DEFAULT NULL,
   `ttd_kedua` date DEFAULT NULL,
   `tanggal_modifikasi` date NOT NULL DEFAULT current_timestamp(),
@@ -123,8 +124,8 @@ CREATE TABLE `pengajuan_cuti` (
 -- Dumping data for table `pengajuan_cuti`
 --
 
-INSERT INTO `pengajuan_cuti` (`id_pengajuan`, `id_pegawai`, `id_jeniscuti`, `lama_cuti`, `alasan`, `mulai_cuti`, `selesai_cuti`, `catatan_cuti`, `alamat_cuti`, `no_hp`, `ttd_pertama`, `ttd_kedua`, `tanggal_modifikasi`, `status_pengajuan`, `dokumen`) VALUES
-(10, 5, 1, 1, 'asdadasd', '2023-12-05', '2023-12-05', '', 'asdasdasdad', '', '2023-11-26', '2023-11-26', '2023-11-25', 'Disetujui', '');
+INSERT INTO `pengajuan_cuti` (`id_pengajuan`, `id_pegawai`, `id_jeniscuti`, `lama_cuti`, `alasan`, `mulai_cuti`, `selesai_cuti`, `catatan_cuti`, `alamat_cuti`, `ttd_pertama`, `ttd_kedua`, `tanggal_modifikasi`, `status_pengajuan`, `dokumen`) VALUES
+(10, 5, 1, 1, 'asdadasd', '2023-12-05', '2023-12-05', 'adasdaadasddd', 'asdasdasdad', '2023-11-01', '2023-11-01', '2023-11-25', 'Disetujui', '');
 
 -- --------------------------------------------------------
 
@@ -134,7 +135,7 @@ INSERT INTO `pengajuan_cuti` (`id_pengajuan`, `id_pegawai`, `id_jeniscuti`, `lam
 
 CREATE TABLE `pengguna` (
   `id_pengguna` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
+  `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` varchar(20) NOT NULL,
   `id_pegawai` int(11) DEFAULT NULL
@@ -145,11 +146,18 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `role`, `id_pegawai`) VALUES
-(1, 'admin', '$2y$10$F4WmVCcDJCbzmLGECWe.mOEvgyY4rw6VPcLT0lXA8EVBFRpNurqni', '0', NULL),
+(1, 'superadmin', '$2y$10$F4WmVCcDJCbzmLGECWe.mOEvgyY4rw6VPcLT0lXA8EVBFRpNurqni', '0', NULL),
 (3, '1234567890', '$2y$10$B6w7.IhyuTi4upeux1rZ0OqUHix7swJgAuRawmzhD9.u9nqYsJrEC', '2', 4),
 (4, '3312', '$2y$10$/0MBBSnHcD5VZlKZ8VTllukK4mYp3fVIC6PhMySWHQ73HPFFcqCFm', '2', 5),
 (5, '1234', '$2y$10$cIxjkp7BfYUcdyNAzLJvsuKIUtTUDfwA/kbFc5.dpZ80wTEjbeNWG', '2', 6),
-(6, '12345', '$2y$10$hm.A5kRNs9cbZBcx7.fhJ.yMilPoTBzrVXcrD2uqR3B/NLTrOH.qu', '2', 7);
+(6, '12345', '$2y$10$hm.A5kRNs9cbZBcx7.fhJ.yMilPoTBzrVXcrD2uqR3B/NLTrOH.qu', '2', 7),
+(7, '671008', '$2y$10$bD9RGkrc1SxP.LWYRK29.eIZvIdCJusVtkaIpi3qf0RWklyuEYE4u', '2', 8),
+(8, '234234', '$2y$10$V7iozsR0lt5KqQtV8rjCourqnIIqph/IUrJIJBOtHukA76d7mK6LO', '2', 13),
+(10, 'admin-rektorat', '$2y$10$octf7jAqH9BVd8HuKCc2uOtS5HC3a24qT.bCgt.Z4osTnJECzSIiO', '1', NULL),
+(11, 'admin-bakp', '$2y$10$zS6ubEIe2ZCBNR2njQIEVeajvB2lVwtj8rdHCyV5twu1YF/KScfj.', '1', NULL),
+(12, 'admin-buk', '$2y$10$JA3/rnF3r2CU5hxIfuFACeufUva6KedZx27qhzD631cyskBYG7vCq', '1', NULL),
+(13, 'admin-fakultas-teknik', '$2y$10$32ufCmjVrmBFkuEEtbW7JObEt7CzUNFcIqvM6.ZYzOQugYOFgfdDm', '1', NULL),
+(14, 'admin-fakultas-pertanian', '$2y$10$gHZcIZNfF5Cj2JY2kB17nOSDNa6vEsJDhhfw3DfyERSY8F5x2Lhx6', '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -217,8 +225,8 @@ ALTER TABLE `jenis_cuti`
 --
 ALTER TABLE `pegawai`
   ADD PRIMARY KEY (`id_pegawai`),
-  ADD UNIQUE KEY `nip` (`nip`),
   ADD UNIQUE KEY `nik` (`nik`),
+  ADD UNIQUE KEY `nip` (`nip`),
   ADD KEY `id_jabatan` (`id_jabatan`);
 
 --
@@ -271,7 +279,7 @@ ALTER TABLE `jenis_cuti`
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `pengajuan_cuti`
@@ -283,7 +291,7 @@ ALTER TABLE `pengajuan_cuti`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tamplate_persetujuan`
@@ -295,7 +303,7 @@ ALTER TABLE `tamplate_persetujuan`
 -- AUTO_INCREMENT for table `unit_kerja`
 --
 ALTER TABLE `unit_kerja`
-  MODIFY `id_unitkerja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_unitkerja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables
