@@ -31,6 +31,28 @@ $lain = Kalkulasi('OTHER-FORM', [
   'id_pegawai' => $_GET['id'],
   'tanggal_modifikasi' => date("Y-m-d"),
 ]);
+if (isset($_POST['reset-pass'])) {
+  unset($_POST['reset-pass']);
+  $username = $single['nip'] ?? $single['nik'];
+  $res = Auth('UPDATE', [
+    'new' => $username,
+    'username' => $username,
+    'password' => password_hash($username, PASSWORD_DEFAULT),
+  ]);
+  if ($res) {
+    $_SESSION['flash'] = [
+      'status' => 'success',
+      'msg' => 'Berhasil mereset Password!',
+    ];
+  } else {
+    $_SESSION['flash'] = [
+      'status' => 'error',
+      'msg' => 'Gagal mereset Password!',
+    ];
+  }
+  header("Refresh:0");
+  die;
+}
 ?>
 <div class="content-header">
   <div class="container-fluid">
@@ -59,6 +81,14 @@ $lain = Kalkulasi('OTHER-FORM', [
         <div class="card card-info">
           <div class="card-header">
             <h3 class="card-title">Data Diri</h3>
+            <?php if ($_SESSION['auth']['role'] == '0') { ?>
+              <div class="float-sm-right">
+                <button class="btn btn-secondary btn-sm" onclick="resetPassword();">Reset Password</button>
+                <form action="" method="post" id="reset-pass">
+                  <input type="hidden" name="reset-pass">
+                </form>
+              </div>
+            <?php } ?>
           </div>
           <!-- form start -->
           <div class="form-horizontal">
@@ -223,7 +253,21 @@ $lain = Kalkulasi('OTHER-FORM', [
   </div>
 </section>
 <script>
+  const resetPassword = () => {
+    Swal.fire({
+      title: "Reset Password?",
+      text: "Password dari pegawai ini akan direset.",
+      showCancelButton: true,
+      confirmButtonText: "Ya",
+      canselButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $('#reset-pass').submit();
+      }
+    });
+  }
   $(document).ready(() => {
+    // function
     <?php if (isset($_SESSION['flash']['type'])) { ?>
       <?php if ($_SESSION['flash']['type'] === 'ADD') { ?>
         $('#modal-add').modal('show');

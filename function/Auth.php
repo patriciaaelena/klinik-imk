@@ -5,7 +5,7 @@ if (!isset($halaman)) {
 }
 function Auth($type, $data)
 {
-  global $conn;
+  global $conn, $user;
   switch ($type) {
     case 'REGISTER':
       $keys = [];
@@ -26,10 +26,53 @@ function Auth($type, $data)
       }
       break;
 
+    case 'PASSWORD':
+      if ($data['password-baru'] !== $data['ulangi-baru']) {
+        unset($data['password-baru']);
+        $_SESSION['flash'] = [
+          'status' => 'error',
+          'msg' => 'Password Baru Tidak Sama!',
+        ];
+        return;
+      }
+      $sql = "SELECT*FROM pengguna WHERE id_pengguna='$user[id_pengguna]'";
+      $result = mysqli_query($conn, $sql);
+      if ($result) {
+        $password = mysqli_fetch_assoc($result)['password'];
+        if (password_verify($data['password-lama'], $password)) {
+          $password = password_hash($data['password-baru'], PASSWORD_DEFAULT);
+          $sql = "UPDATE pengguna SET password='$password' WHERE id_pengguna='$user[id_pengguna]'";
+          $result = mysqli_query($conn, $sql);
+          if ($result) {
+            $_SESSION['flash'] = [
+              'status' => 'success',
+              'msg' => 'Berhasil memperbarui Password!',
+            ];
+          } else {
+            $_SESSION['flash'] = [
+              'status' => 'error',
+              'msg' => 'Gagal memperbarui Password!',
+            ];
+          }
+        } else {
+          $_SESSION['flash'] = [
+            'status' => 'error',
+            'msg' => 'Password Lama Tidak Benar!',
+          ];
+        }
+      } else {
+        $_SESSION['flash'] = [
+          'status' => 'error',
+          'msg' => 'Gagal memperbarui Password!',
+        ];
+      }
+      break;
+
     case 'UPDATE':
       if ($data['username'] === 'admin') return;
-      $sql = "UPDATE pengguna SET username='$data[new]' WHERE username='$data[username]'";
+      $sql = "UPDATE pengguna SET username='$data[new]', password='$data[password]' WHERE username='$data[username]'";
       $result = mysqli_query($conn, $sql);
+      return $result;
       break;
 
     case 'DELETE':

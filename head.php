@@ -4,12 +4,18 @@ if (!isset($_SESSION['auth'])) {
   header("Location: ./login");
   die;
 }
+$user = $_SESSION['auth'];
 if (isset($_POST['logout'])) {
   Auth('LOGOUT', '');
   header("Refresh:0");
   die;
 }
-$user = $_SESSION['auth'];
+if (isset($_POST['password'])) {
+  unset($_POST['password']);
+  Auth('PASSWORD', $_POST);
+  header("Refresh:0");
+  die;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +48,47 @@ $user = $_SESSION['auth'];
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+  <div class="modal fade" id="change-password" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ubah Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="needs-validation" novalidate method="post">
+          <div class="modal-body">
+            <div class="col pb-2">
+              <label for="password-lama" class="form-label">Password Lama <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" id="password-lama" name="password-lama" required>
+              <div class="invalid-feedback">
+                Harus diisi
+              </div>
+            </div>
+            <div class="col pb-2">
+              <label for="password-baru" class="form-label">Password Baru <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" id="password-baru" name="password-baru" required>
+              <div class="invalid-feedback">
+                Harus diisi
+              </div>
+            </div>
+            <div class="col pb-2">
+              <label for="ulangi-baru" class="form-label">Ulangi Password Baru <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" id="ulangi-baru" name="ulangi-baru" required>
+              <div class="invalid-feedback">
+                Harus diisi
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary" name="password">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <div class="prevent-non-desktop flex-column justify-content-center align-items-center gap-5">
     <img class="animation__wobble drop-shadow" src="./dist/img/upr.png" alt="UPRLogo" height="100" width="100">
     <div>
@@ -68,13 +115,12 @@ $user = $_SESSION['auth'];
         <span class="brand-text font-weight-light drop-shadow">SISTEM INFORMASI CUTI</span>
       </a>
       <div class="sidebar">
-        <form method="post" id="logout-form">
-          <input type="hidden" name="logout">
-          <button type="button" class="btn btn-link text-light col-12" onclick="handleLogout()">
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center flex-column">
+        <li class="nav-item dropdown" style="list-style-type: none;">
+          <a class="nav-link py-0" data-toggle="dropdown" href="#">
+            <div class="user-panel d-flex align-items-center flex-column pt-3 pb-2">
               <img src="./dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" width="80px">
               <div class="info flex-1">
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column text-center">
                   <div>
                     <?= $_SESSION['auth']['nama_pegawai'] ?>
                   </div>
@@ -92,6 +138,15 @@ $user = $_SESSION['auth'];
                 </div>
               </div>
             </div>
+          </a>
+          <div class="dropdown-menu">
+            <button class="dropdown-item text-dark btn btn-link" data-toggle="modal" data-target="#change-password">Ubah Password</button>
+            <button class="dropdown-item text-dark btn btn-link" onclick="handleLogout()">Keluar</button>
+          </div>
+        </li>
+        <form method="post" id="logout-form" class="d-none">
+          <input type="hidden" name="logout">
+          <button type="button" class="btn btn-link text-light col-12">
           </button>
         </form>
         <nav class="mt-2">

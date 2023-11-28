@@ -75,9 +75,11 @@ function UnitKerja($type, $data)
       $sql = "UPDATE unit_kerja SET " . (implode(', ', $sets)) . " WHERE id_unitkerja = '$data[id_unitkerja]'";
       $result = mysqli_query($conn, $sql);
       if (mysqli_affected_rows($conn) > 0) {
+        $new = "admin-" . strtolower(implode("-", explode(" ", $data['nama_unitkerja'])));
         Auth('UPDATE', [
-          'new' => "admin-" . strtolower(implode("-", explode(" ", $data['nama_unitkerja']))),
+          'new' => $new,
           'username' => $username,
+          'password' => password_hash($new, PASSWORD_DEFAULT),
         ]);
         $_SESSION['flash'] = [
           'status' => 'success',
