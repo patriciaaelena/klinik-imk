@@ -92,6 +92,7 @@ $rows = Pegawai('', []);
     if ($_SESSION['flash']['type'] === 'ADD') {
       $add['nik'] = " value='" . $_SESSION['flash']['data']['nik'] . "'";
       $add['nip'] = " value='" . $_SESSION['flash']['data']['nip'] . "'";
+      $add['mulai_kerja'] = " value='" . $_SESSION['flash']['data']['mulai_kerja'] . "'";
       $add['nama_pegawai'] = " value='" . $_SESSION['flash']['data']['nama_pegawai'] . "'";
       $add['id_jabatan'] = $_SESSION['flash']['data']['id_jabatan'];
       $add['status'] = $_SESSION['flash']['data']['status'];
