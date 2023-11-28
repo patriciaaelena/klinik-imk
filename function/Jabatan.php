@@ -40,6 +40,8 @@ function Jabatan($type, $data)
         $_SESSION['flash'] = [
           'status' => 'error',
           'msg' => 'Gagal menambah data!',
+          'type' => 'ADD',
+          'data' => $data,
         ];
       }
       break;
@@ -50,7 +52,7 @@ function Jabatan($type, $data)
       if (mysqli_num_rows($result) > 0) {
         $_SESSION['flash'] = [
           'status' => 'error',
-          'msg' => 'Nama unit kerja sudah digunakan!',
+          'msg' => 'Jabatan sudah ada pada unit kerja tersebut!',
           'type' => 'EDIT',
           'data' => $data,
         ];

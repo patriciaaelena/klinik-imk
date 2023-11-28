@@ -104,6 +104,8 @@ function PengajuanCuti($type, $data)
         $_SESSION['flash'] = [
           'status' => 'error',
           'msg' => 'Persetujuan permohonan gagal!',
+          'type' => 'ADD',
+          'data' => $data,
         ];
       }
       break;

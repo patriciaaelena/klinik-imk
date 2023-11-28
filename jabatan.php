@@ -194,7 +194,7 @@ $rows = Jabatan('', []);
               <select class="custom-select form-select rounded-0" id="id_unitkerja_select" name="id_unitkerja" disabled>
                 <option value="">Pilih Unit Kerja</option>
                 <?php foreach ($select1 as $row) { ?>
-                  <option value="<?= $row['id_unitkerja'] ?>" <?= isset($add['id_unitkerja']) ? ($row['id_unitkerja'] === $add['id_unitkerja'] ? " selected" : "") : "" ?>><?= $row['nama_unitkerja'] ?></option>
+                  <option value="<?= $row['id_unitkerja'] ?>" <?= isset($edit['id_unitkerja']) ? ($row['id_unitkerja'] === $edit['id_unitkerja'] ? " selected" : "") : "" ?>><?= $row['nama_unitkerja'] ?></option>
                 <?php } ?>
               </select>
               <div class="invalid-feedback">
@@ -206,7 +206,7 @@ $rows = Jabatan('', []);
               <select class="form-select custom-select rounded-0 select2bs4" id="id_tamplate" name="id_tamplate">
                 <option value="">Pilih Template Persetujuan</option>
                 <?php foreach ($select2 as $row) { ?>
-                  <option class="id-<?= $row['persetujuan_pertama'] ?> id-<?= $row['persetujuan_kedua'] ?>" value="<?= $row['id_tamplate'] ?>" <?= isset($add['id_tamplate']) ? ($row['id_tamplate'] === $add['id_tamplate'] ? " selected" : "") : "" ?> title="Pertama : <?= $row['nama_pertama'] ?>&#013;Kedua : <?= $row['nama_kedua'] ?>"><?= $row['nama_tamplate'] ?></option>
+                  <option class="id-<?= $row['persetujuan_pertama'] ?> id-<?= $row['persetujuan_kedua'] ?>" value="<?= $row['id_tamplate'] ?>" <?= isset($edit['id_tamplate']) ? ($row['id_tamplate'] === $edit['id_tamplate'] ? " selected" : "") : "" ?> title="Pertama : <?= $row['nama_pertama'] ?>&#013;Kedua : <?= $row['nama_kedua'] ?>"><?= $row['nama_tamplate'] ?></option>
                 <?php } ?>
               </select>
             </div>

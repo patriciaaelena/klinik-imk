@@ -39,6 +39,8 @@ function UnitKerja($type, $data)
         $_SESSION['flash'] = [
           'status' => 'error',
           'msg' => 'Gagal menambah data!',
+          'type' => 'ADD',
+          'data' => $data,
         ];
       }
       break;

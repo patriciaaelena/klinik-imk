@@ -164,7 +164,7 @@ $rows = UnitKerja('', []);
               <select class="custom-select form-select rounded-0" id="id_induk" name="id_induk" <?= $edit['id_induk'] ?? '' ?>>
                 <option value="">Pilih Induk</option>
                 <?php foreach ($rows as $row) { ?>
-                  <option value="<?= $row['id_unitkerja'] ?>" <?= isset($add['id_induk']) ? ($row['id_unitkerja'] === $edit['id_induk'] ? " selected" : "") : "" ?>><?= $row['nama_unitkerja'] ?></option>
+                  <option value="<?= $row['id_unitkerja'] ?>" <?= isset($edit['id_induk']) ? ($row['id_unitkerja'] === $edit['id_induk'] ? " selected" : "") : "" ?>><?= $row['nama_unitkerja'] ?></option>
                 <?php } ?>
               </select>
             </div>
