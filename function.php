@@ -54,13 +54,6 @@ $username = "root";
 $password = "";
 $dbname = "sitibel";
 
-if ($dep === "PROD") {
-  $servername = "localhost";
-  $username = "u370369030_siibel";
-  $password = "1n1S11b3l";
-  $dbname = "u370369030_sitibel";
-}
-
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 if (!$conn) {
   die("Connection danger: " . mysqli_connect_error());
