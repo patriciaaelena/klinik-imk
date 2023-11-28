@@ -31,6 +31,10 @@ function UnitKerja($type, $data)
       $sql = "INSERT INTO unit_kerja(" . (implode(', ', $keys)) . ") VALUES(" . (implode(', ', $values)) . ")";
       $result = mysqli_query($conn, $sql);
       if (mysqli_affected_rows($conn) > 0) {
+        $param['username'] = "admin-" . strtolower(implode("-", explode(" ", $data['nama_unitkerja'])));
+        $param['password'] = password_hash($param['username'], PASSWORD_DEFAULT);
+        $param['role'] = "1";
+        Auth('REGISTER', $param);
         $_SESSION['flash'] = [
           'status' => 'success',
           'msg' => 'Berhasil menambah data!',

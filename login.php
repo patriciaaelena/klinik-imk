@@ -44,10 +44,9 @@ if (isset($_POST['login'])) {
       <div class="card">
         <div class="card-body login-card-body">
           <p class="login-box-msg">Silahkan Masukkan NIP/NIK dan Password untuk Login</p>
-
-          <form method="post">
+          <form method="post" class="needs-validation" novalidate>
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="NIP / NIK" name="username">
+              <input type="text" class="form-control" placeholder="NIP / NIK" name="username" required>
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
@@ -55,7 +54,7 @@ if (isset($_POST['login'])) {
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="password" class="form-control" placeholder="Password" name="password">
+              <input type="password" class="form-control" placeholder="Password" name="password" required>
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-lock"></span>
@@ -77,6 +76,20 @@ if (isset($_POST['login'])) {
   <script src="./dist/js/adminlte.js"></script>
   <script src="./plugins/sweetalert2/sweetalert2.js"></script>
   <script>
+    (function() {
+      'use strict'
+      var forms = document.querySelectorAll('.needs-validation')
+      Array.prototype.slice.call(forms)
+        .forEach(function(form) {
+          form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })();
     <?php if (isset($_SESSION['flash'])) { ?>
       $(document).ready(() => {
         Swal.fire({

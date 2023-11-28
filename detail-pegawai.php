@@ -9,7 +9,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
   header("Location: ./pegawai");
   die;
 }
-if ($_SESSION['auth']['role'] != '0') {
+if ($_SESSION['auth']['role'] == '2') {
   require_once('./401.php');
   die;
 }

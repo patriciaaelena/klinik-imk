@@ -72,7 +72,10 @@ $rows = UnitKerja('', []);
                   <tr>
                     <td><?= $i++ ?></td>
                     <td>
-                      <button type="button" class="btn btn-sm btn-primary" onclick="handleEdit('<?= $row['id_unitkerja'] ?>','<?= $row['nama_unitkerja'] ?>','<?= $row['id_induk'] ?? '' ?>');"><i class="fas fa-edit"></i></button>
+                      <?php
+                      $username = "admin-" . strtolower(implode("-", explode(" ", $row['nama_unitkerja'])));
+                      ?>
+                      <button type="button" class="btn btn-sm btn-primary" onclick="handleEdit('<?= $row['id_unitkerja'] ?>','<?= $row['nama_unitkerja'] ?>','<?= $row['id_induk'] ?? '' ?>','<?= $username ?>');"><i class="fas fa-edit"></i></button>
                       <button type="button" class="btn btn-sm btn-danger" onclick="handleDelete('<?= $row['id_unitkerja'] ?>');"><i class="fas fa-trash"></i></button>
                     </td>
                     <td><?= $row['nama_unitkerja'] ?></td>
@@ -98,6 +101,7 @@ $rows = UnitKerja('', []);
     } else {
       $edit['id_unitkerja'] = " value='" . $_SESSION['flash']['data']['id_unitkerja'] . "'";
       $edit['nama_unitkerja'] = " value='" . $_SESSION['flash']['data']['nama_unitkerja'] . "'";
+      $edit['username'] = " value='" . $_SESSION['flash']['data']['username'] . "'";
       $edit['id_induk'] = $_SESSION['flash']['data']['id_induk'] ?? '';
     }
   }
@@ -168,6 +172,10 @@ $rows = UnitKerja('', []);
                 <?php } ?>
               </select>
             </div>
+            <div class="col pb-2">
+              <label for="nama_unitkerja" class="form-label">Username Admin</span></label>
+              <input type="text" class="form-control" id="username" <?= $edit['username'] ?? '' ?> readonly>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -183,13 +191,14 @@ $rows = UnitKerja('', []);
   </form>
 </section>
 <script>
-  const handleEdit = (id, name, parent) => {
+  const handleEdit = (id, name, parent, username) => {
     $('#id_induk option').each((i, val) => {
       if (val.value == id) val.classList.add("d-none");
     })
     $('#id_unitkerja').val(id);
     $('#nama_unitkerja').val(name);
     $('#id_induk').val(parent);
+    $('#username').val(username);
     $('#modal-edit').modal('show');
   }
   const handleDelete = (id) => {

@@ -2,7 +2,7 @@
 $halaman = 'Detail Pengajuan Cuti Pegawai';
 require_once('./head.php');
 require_once('./function/PengajuanCuti.php');
-if ($_SESSION['auth']['role'] != '0') {
+if ($_SESSION['auth']['role'] == '2') {
   require_once('./401.php');
   die;
 }

@@ -3,7 +3,7 @@ $halaman = 'Pegawai';
 require_once('./head.php');
 require_once('./function/Jabatan.php');
 require_once('./function/Pegawai.php');
-if ($_SESSION['auth']['role'] != '0') {
+if ($_SESSION['auth']['role'] == '2') {
   require_once('./401.php');
   die;
 }
@@ -13,8 +13,17 @@ if (isset($_POST['tambah'])) {
   header("Refresh:0");
   die;
 }
+$cond = [];
+if ($user['role'] == "1") {
+  $cond[] = $user['id_unitkerja'];
+  if ($user['id_induk'] !== NULL) $cond[] = $user['id_induk'];
+  $cond = array_map(function (int $value): string {
+    return "id_unitkerja='$value'";
+  }, $cond);
+  $cond = ["where" => "WHERE " . implode(" OR ", $cond)];
+}
 $select = Jabatan('GET-FREE', []);
-$rows = Pegawai('', []);
+$rows = Pegawai('', count($cond) === 0 ? [] : $cond);
 ?>
 <div class="content-header">
   <div class="container-fluid">

@@ -22,6 +22,14 @@ $fmt = new IntlDateFormatter(
   IntlDateFormatter::GREGORIAN,
   "dd MMMM Y"
 );
+$fmtMY = new IntlDateFormatter(
+  'id-ID',
+  IntlDateFormatter::FULL,
+  IntlDateFormatter::FULL,
+  'Asia/Jakarta',
+  IntlDateFormatter::GREGORIAN,
+  "MMMM Y"
+);
 
 $jmlTahunan = 12;
 $yearNow = (int) date("Y");

@@ -58,7 +58,7 @@ $user = $_SESSION['auth'];
       </ul>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item d-flex align-items-center">
-          <strong>12.00, 11/11/2023</strong>
+          <strong><?= $fmt->format(strtotime(date('Y-m-d'))) ?></strong>
         </li>
       </ul>
     </nav>
@@ -76,12 +76,18 @@ $user = $_SESSION['auth'];
               <div class="info flex-1">
                 <div class="d-flex flex-column">
                   <div>
-                    <?= $_SESSION['auth']['id_pegawai'] !== NULL ? $_SESSION['auth']['nama_pegawai'] : $_SESSION['auth']['username'] ?>
+                    <?= $_SESSION['auth']['nama_pegawai'] ?>
                   </div>
-                  <?php if ($_SESSION['auth']['nik'] !== NULL) { ?>
+                  <?php if (isset($_SESSION['auth']['nik'])) { ?>
                     <div>
                       <?= $_SESSION['auth']['nip'] != NULL ? "NIP. " . $_SESSION['auth']['nip'] : "NIK. " . $_SESSION['auth']['nik'] ?>
                     </div>
+                  <?php } else if ($_SESSION['auth']['role'] == "1") { ?>
+                    <?php if ($_SESSION['auth']['id_induk'] !== NULL) { ?>
+                      <div>
+                        <?= $_SESSION['auth']['nama_induk'] ?>
+                      </div>
+                    <?php } ?>
                   <?php } ?>
                 </div>
               </div>

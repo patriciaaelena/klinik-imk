@@ -245,6 +245,9 @@ function PengajuanCuti($type, $data)
         $arrCondition[] = "$key='$val'";
       }
       $where = count($arrCondition) > 0 ? " WHERE " . implode(' AND ', $arrCondition) : "";
+      if (isset($data['where'])) {
+        $where = $data["where"];
+      }
       $sql = "SELECT * FROM pengajuan_cuti 
               JOIN jenis_cuti USING(id_jeniscuti) 
               JOIN pegawai pg USING(id_pegawai) 

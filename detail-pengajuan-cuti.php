@@ -2,7 +2,7 @@
 $halaman = 'Detail Pengajuan Cuti';
 require_once('./head.php');
 require_once('./function/PengajuanCuti.php');
-if ($_SESSION['auth']['role'] != '0') {
+if ($_SESSION['auth']['role'] == '2') {
   require_once('./401.php');
   die;
 }
@@ -138,7 +138,7 @@ if ($pengajuan['ttd_kedua'] !== NULL) {
               <div class="form-group col-12 d-flex align-items-center">
                 <label for="inputEmail3" class="col-3 col-xl-2">Unit Kerja</label>
                 <div class="input-group col-9 col-xl-10">
-                  <input class="form-control" type="text" value="<?= $pengajuan['nama_jeniscuti'] ?>" readonly>
+                  <input class="form-control" type="text" value="<?= $pengajuan['nama_unitkerja'] ?>" readonly>
                 </div>
               </div>
             </div>
