@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2023 at 11:59 AM
+-- Generation Time: Nov 28, 2023 at 12:45 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -146,7 +146,7 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `role`, `id_pegawai`) VALUES
-(1, 'superadmin', '$2y$10$F4WmVCcDJCbzmLGECWe.mOEvgyY4rw6VPcLT0lXA8EVBFRpNurqni', '0', NULL),
+(1, 'admin', '$2y$10$F4WmVCcDJCbzmLGECWe.mOEvgyY4rw6VPcLT0lXA8EVBFRpNurqni', '0', NULL),
 (3, '1234567890', '$2y$10$B6w7.IhyuTi4upeux1rZ0OqUHix7swJgAuRawmzhD9.u9nqYsJrEC', '2', 4),
 (4, '3312', '$2y$10$/0MBBSnHcD5VZlKZ8VTllukK4mYp3fVIC6PhMySWHQ73HPFFcqCFm', '2', 5),
 (5, '1234', '$2y$10$cIxjkp7BfYUcdyNAzLJvsuKIUtTUDfwA/kbFc5.dpZ80wTEjbeNWG', '2', 6),
@@ -242,6 +242,7 @@ ALTER TABLE `pengajuan_cuti`
 --
 ALTER TABLE `pengguna`
   ADD PRIMARY KEY (`id_pengguna`),
+  ADD UNIQUE KEY `username` (`username`),
   ADD KEY `id_pegawai` (`id_pegawai`);
 
 --
@@ -291,7 +292,7 @@ ALTER TABLE `pengajuan_cuti`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tamplate_persetujuan`
@@ -303,7 +304,7 @@ ALTER TABLE `tamplate_persetujuan`
 -- AUTO_INCREMENT for table `unit_kerja`
 --
 ALTER TABLE `unit_kerja`
-  MODIFY `id_unitkerja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_unitkerja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables

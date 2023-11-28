@@ -201,7 +201,7 @@ $rows = UnitKerja('', []);
     $('#username').val(username);
     $('#modal-edit').modal('show');
   }
-  const handleDelete = (id) => {
+  const handleDelete = (id, username) => {
     $('#delete-id').val(id);
     Swal.fire({
       title: "Yakin menghapus data?",

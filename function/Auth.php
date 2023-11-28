@@ -25,6 +25,19 @@ function Auth($type, $data)
         ];
       }
       break;
+
+    case 'UPDATE':
+      if ($data['username'] === 'admin') return;
+      $sql = "UPDATE pengguna SET username='$data[new]' WHERE username='$data[username]'";
+      $result = mysqli_query($conn, $sql);
+      break;
+
+    case 'DELETE':
+      if ($data === 'admin') return;
+      $sql = "DELETE FROM pengguna WHERE username='$data'";
+      $result = mysqli_query($conn, $sql);
+      break;
+
     case 'LOGIN':
       $sql = "SELECT * FROM pengguna
           WHERE username = '$data[username]'";

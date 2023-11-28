@@ -5,7 +5,7 @@ if (!isset($halaman)) {
 }
 $dep = "DEV";
 
-if ($dep = "PROD1") {
+if ($dep === "PROD1") {
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
   ini_set('html_errors', 1);
@@ -54,7 +54,7 @@ $username = "root";
 $password = "";
 $dbname = "sitibel";
 
-if ($dep = "PROD") {
+if ($dep === "PROD") {
   $servername = "localhost";
   $username = "u370369030_siibel";
   $password = "1n1S11b3l";

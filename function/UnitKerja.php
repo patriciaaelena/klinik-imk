@@ -69,9 +69,16 @@ function UnitKerja($type, $data)
           array_push($sets, "$key = NULL");
         }
       }
+      $sql = "SELECT*FROM unit_kerja WHERE id_unitkerja = '$data[id_unitkerja]'";
+      $result = mysqli_fetch_assoc(mysqli_query($conn, $sql));
+      $username = "admin-" . strtolower(implode("-", explode(" ", $result['nama_unitkerja'])));
       $sql = "UPDATE unit_kerja SET " . (implode(', ', $sets)) . " WHERE id_unitkerja = '$data[id_unitkerja]'";
       $result = mysqli_query($conn, $sql);
       if (mysqli_affected_rows($conn) > 0) {
+        Auth('UPDATE', [
+          'new' => "admin-" . strtolower(implode("-", explode(" ", $data['nama_unitkerja']))),
+          'username' => $username,
+        ]);
         $_SESSION['flash'] = [
           'status' => 'success',
           'msg' => 'Berhasil mengubah data!',
@@ -85,9 +92,13 @@ function UnitKerja($type, $data)
       break;
 
     case 'DELETE':
+      $sql = "SELECT*FROM unit_kerja WHERE id_unitkerja = '$data[id_unitkerja]'";
+      $result = mysqli_fetch_assoc(mysqli_query($conn, $sql));
+      $username = "admin-" . strtolower(implode("-", explode(" ", $result['nama_unitkerja'])));
       $sql = "DELETE FROM unit_kerja WHERE id_unitkerja = '$data[id_unitkerja]'";
       $result = mysqli_query($conn, $sql);
       if (mysqli_affected_rows($conn) > 0) {
+        Auth('DELETE', $username);
         $_SESSION['flash'] = [
           'status' => 'success',
           'msg' => 'Berhasil menghapus data!',
