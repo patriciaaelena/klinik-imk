@@ -93,10 +93,22 @@ function Auth($type, $data)
             unset($row['id_pegawai']);
             if ($row['role'] == '1') {
               $nama_unitkerja = str_replace("-", " ", str_replace("admin-", "", $row['username']));
+              // GET MAIN
               $sql = "SELECT uk1.*, uk2.nama_unitkerja nama_induk FROM unit_kerja uk1 LEFT JOIN unit_kerja uk2 ON uk1.id_induk=uk2.id_unitkerja
                         WHERE LOWER(uk1.nama_unitkerja) = '$nama_unitkerja'";
               $result = mysqli_fetch_assoc(mysqli_query($conn, $sql));
               $row = array_merge($row, $result);
+              // GET CHILD
+              $sql = "SELECT uk1.*, uk2.nama_unitkerja nama_induk FROM unit_kerja uk1 LEFT JOIN unit_kerja uk2 ON uk1.id_induk=uk2.id_unitkerja
+                        WHERE uk1.id_induk = '$result[id_unitkerja]'";
+              $result = mysqli_query($conn, $sql);
+              $child = [];
+              if (mysqli_num_rows($result) > 0) {
+                foreach ($result as $value) {
+                  $child[] = $value;
+                }
+              }
+              $row['child'] = $child;
             }
             $_SESSION['auth'] = $row;
             $_SESSION['flash'] = [

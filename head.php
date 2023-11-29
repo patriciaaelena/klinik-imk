@@ -139,6 +139,17 @@ if (isset($_POST['password'])) {
               </div>
             </div>
           </a>
+          <?php if ($_SESSION['auth']['role'] == "1") { ?>
+            <?php if (count($_SESSION['auth']['child']) > 0) { ?>
+              <a class="nav-link py-0">
+                <div class="user-panel d-flex align-items-center flex-column pt-2 pb-2">
+                  <?php foreach ($_SESSION['auth']['child'] as $row) { ?>
+                    <div><?= "$row[nama_unitkerja] $row[nama_induk]" ?></div>
+                  <?php } ?>
+                </div>
+              </a>
+            <?php } ?>
+          <?php } ?>
           <div class="dropdown-menu">
             <button class="dropdown-item text-dark btn btn-link" data-toggle="modal" data-target="#change-password">Ubah Password</button>
             <button class="dropdown-item text-dark btn btn-link" onclick="handleLogout()">Keluar</button>

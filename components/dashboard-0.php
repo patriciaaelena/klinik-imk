@@ -38,9 +38,20 @@ $state = [
         <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
         <div class="info-box-content">
           <?php if ($user['role'] == "1") { ?>
-            <span class="info-box-text"><?= $user['nama_unitkerja'] ?></span>
-            <?php if ($user['nama_induk'] !== NULL) { ?>
-              <span class="info-box-text"><?= $user['nama_induk'] ?></span>
+            <span class="info-box-text"><?= "$user[nama_unitkerja] $user[nama_induk]" ?></span>
+            <?php if (count($user['child']) > 0) { ?>
+              <div style="display: flex; flex-wrap: wrap; column-gap: 6px;">
+                <?php
+                $arr = [];
+                foreach ($user['child'] as $row) {
+                  $arr[] = "$row[nama_unitkerja] $row[nama_induk]";
+                }
+                $arr = explode("<<", implode(",<<", $arr));
+                foreach ($arr as $value) {
+                ?>
+                  <span class="info-box-text"><?= "$value" ?></span>
+                <?php  } ?>
+              </div>
             <?php } ?>
           <?php } else { ?>
             <span class="info-box-text">Unit Kerja</span>

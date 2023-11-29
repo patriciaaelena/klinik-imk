@@ -9,7 +9,9 @@ if ($_SESSION['auth']['role'] == '2') {
 $cond = [];
 if ($user['role'] == "1") {
   $cond[] = $user['id_unitkerja'];
-  if ($user['id_induk'] !== NULL) $cond[] = $user['id_induk'];
+  foreach ($user['child'] as $row) {
+    $cond[] = $row['id_unitkerja'];
+  }
   $cond = array_map(function (int $value): string {
     return "id_unitkerja='$value'";
   }, $cond);

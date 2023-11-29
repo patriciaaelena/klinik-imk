@@ -16,7 +16,9 @@ if (isset($_POST['tambah'])) {
 $cond = [];
 if ($user['role'] == "1") {
   $cond[] = $user['id_unitkerja'];
-  if ($user['id_induk'] !== NULL) $cond[] = $user['id_induk'];
+  foreach ($user['child'] as $row) {
+    $cond[] = $row['id_unitkerja'];
+  }
   $cond = array_map(function (int $value): string {
     return "id_unitkerja='$value'";
   }, $cond);
@@ -47,11 +49,13 @@ $rows = Pegawai('', count($cond) === 0 ? [] : $cond);
         <div class="card card-info">
           <div class="card-header">
             <h3 class="card-title">Daftar Pegawai</h3>
-            <div class="float-sm-right">
-              <button class="btn btn-secondary rounded-circle" data-toggle="modal" data-target="#modal-add">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
+            <?php if ($user['role'] == '0') { ?>
+              <div class="float-sm-right">
+                <button class="btn btn-secondary rounded-circle" data-toggle="modal" data-target="#modal-add">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            <?php } ?>
           </div>
           <div class="card-body p-3 table-responsive">
             <table id="main-table" class="table table-bordered table-striped" style="width:100%">
@@ -94,90 +98,92 @@ $rows = Pegawai('', count($cond) === 0 ? [] : $cond);
       </div>
     </div>
   </div>
-  <?php
-  $add = [];
-  $edit = [];
-  if (isset($_SESSION['flash']['type'])) {
-    if ($_SESSION['flash']['type'] === 'ADD') {
-      $add['nik'] = " value='" . $_SESSION['flash']['data']['nik'] . "'";
-      $add['nip'] = " value='" . $_SESSION['flash']['data']['nip'] . "'";
-      $add['mulai_kerja'] = " value='" . $_SESSION['flash']['data']['mulai_kerja'] . "'";
-      $add['nama_pegawai'] = " value='" . $_SESSION['flash']['data']['nama_pegawai'] . "'";
-      $add['id_jabatan'] = $_SESSION['flash']['data']['id_jabatan'];
-      $add['status'] = $_SESSION['flash']['data']['status'];
+  <?php if ($user['role'] == '0') { ?>
+    <?php
+    $add = [];
+    $edit = [];
+    if (isset($_SESSION['flash']['type'])) {
+      if ($_SESSION['flash']['type'] === 'ADD') {
+        $add['nik'] = " value='" . $_SESSION['flash']['data']['nik'] . "'";
+        $add['nip'] = " value='" . $_SESSION['flash']['data']['nip'] . "'";
+        $add['mulai_kerja'] = " value='" . $_SESSION['flash']['data']['mulai_kerja'] . "'";
+        $add['nama_pegawai'] = " value='" . $_SESSION['flash']['data']['nama_pegawai'] . "'";
+        $add['id_jabatan'] = $_SESSION['flash']['data']['id_jabatan'];
+        $add['status'] = $_SESSION['flash']['data']['status'];
+      }
     }
-  }
-  ?>
-  <!-- Modal Add -->
-  <div class="modal fade" id="modal-add" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Tambah Pegawai</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form class="needs-validation" novalidate method="post">
-          <div class="modal-body">
-            <div class="row px-3">
-              <div class="col-6 pb-2">
-                <label for="nik1" class="form-label">NIK <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="nik1" name="nik" <?= $add['nik'] ?? '' ?> required>
-                <div class="invalid-feedback">
-                  Harus diisi
+    ?>
+    <!-- Modal Add -->
+    <div class="modal fade" id="modal-add" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Pegawai</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="needs-validation" novalidate method="post">
+            <div class="modal-body">
+              <div class="row px-3">
+                <div class="col-6 pb-2">
+                  <label for="nik1" class="form-label">NIK <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" id="nik1" name="nik" <?= $add['nik'] ?? '' ?> required>
+                  <div class="invalid-feedback">
+                    Harus diisi
+                  </div>
                 </div>
-              </div>
-              <div class="col-6 pb-3">
-                <label for="nip1" class="form-label">NIP</label>
-                <input type="number" class="form-control" id="nip1" name="nip" <?= $add['nip'] ?? '' ?>>
-              </div>
-              <div class="col-12 pb-3">
-                <label for="nama_pegawai1" class="form-label">Nama Pegawai <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="nama_pegawai1" name="nama_pegawai" <?= $add['nama_pegawai'] ?? '' ?> required>
-                <div class="invalid-feedback">
-                  Harus diisi
+                <div class="col-6 pb-3">
+                  <label for="nip1" class="form-label">NIP</label>
+                  <input type="number" class="form-control" id="nip1" name="nip" <?= $add['nip'] ?? '' ?>>
                 </div>
-              </div>
-              <div class="col-12 pb-3">
-                <label for="id_jabatan1" class="form-label">Jabatan <span class="text-danger">*</span></label>
-                <select class="form-select custom-select rounded-0 select2bs4" id="id_jabatan1" name="id_jabatan" <?= $add['id_jabatan'] ?? '' ?> required style="width: 100%;">
-                  <option value="">Pilih Jabatan</option>
-                  <?php foreach ($select as $row) { ?>
-                    <option value="<?= $row['id_jabatan'] ?>" <?= isset($add['id_jabatan']) ? ($add['id_jabatan'] === $row['id_jabatan'] ? " selected" : "") : "" ?>><?= "$row[nama_jabatan] $row[nama_unitkerja]" ?></option>
-                  <?php } ?>
-                </select>
-                <div class="invalid-feedback">
-                  Harus dipilih
+                <div class="col-12 pb-3">
+                  <label for="nama_pegawai1" class="form-label">Nama Pegawai <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="nama_pegawai1" name="nama_pegawai" <?= $add['nama_pegawai'] ?? '' ?> required>
+                  <div class="invalid-feedback">
+                    Harus diisi
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 pb-3">
-                <label for="mulai_kerja1" class="form-label">Mulai Kerja <span class="text-danger">*</span></label>
-                <input type="date" class="form-control" id="mulai_kerja1" name="mulai_kerja" <?= $add['mulai_kerja'] ?? '' ?> max="<?= date("Y-m-d") ?>" onkeydown="return false;" required>
-                <div class="invalid-feedback">
-                  Harus diisi
+                <div class="col-12 pb-3">
+                  <label for="id_jabatan1" class="form-label">Jabatan <span class="text-danger">*</span></label>
+                  <select class="form-select custom-select rounded-0 select2bs4" id="id_jabatan1" name="id_jabatan" <?= $add['id_jabatan'] ?? '' ?> required style="width: 100%;">
+                    <option value="">Pilih Jabatan</option>
+                    <?php foreach ($select as $row) { ?>
+                      <option value="<?= $row['id_jabatan'] ?>" <?= isset($add['id_jabatan']) ? ($add['id_jabatan'] === $row['id_jabatan'] ? " selected" : "") : "" ?>><?= "$row[nama_jabatan] $row[nama_unitkerja]" ?></option>
+                    <?php } ?>
+                  </select>
+                  <div class="invalid-feedback">
+                    Harus dipilih
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 pb-3">
-                <label for="status1" class="form-label">Status <span class="text-danger">*</span></label>
-                <select class="form-select custom-select rounded-0" id="status1" name="status" <?= $add['status'] ?? '' ?> required>
-                  <option value="TEKON" <?= isset($add['status']) ? ($add['status'] === "TEKON" ? " selected" : "") : "" ?>>TEKON</option>
-                  <option value="PNS" <?= isset($add['status']) ? ($add['status'] === "PNS" ? " selected" : "") : "" ?>>PNS</option>
-                </select>
-                <div class="invalid-feedback">
-                  Harus dipilih
+                <div class="col-12 pb-3">
+                  <label for="mulai_kerja1" class="form-label">Mulai Kerja <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="mulai_kerja1" name="mulai_kerja" <?= $add['mulai_kerja'] ?? '' ?> max="<?= date("Y-m-d") ?>" onkeydown="return false;" required>
+                  <div class="invalid-feedback">
+                    Harus diisi
+                  </div>
+                </div>
+                <div class="col-12 pb-3">
+                  <label for="status1" class="form-label">Status <span class="text-danger">*</span></label>
+                  <select class="form-select custom-select rounded-0" id="status1" name="status" <?= $add['status'] ?? '' ?> required>
+                    <option value="TEKON" <?= isset($add['status']) ? ($add['status'] === "TEKON" ? " selected" : "") : "" ?>>TEKON</option>
+                    <option value="PNS" <?= isset($add['status']) ? ($add['status'] === "PNS" ? " selected" : "") : "" ?>>PNS</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Harus dipilih
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary" name="tambah">Simpan</button>
-          </div>
-        </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary" name="tambah">Simpan</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  <?php } ?>
 </section>
 <script>
   $(document).ready(() => {
