@@ -10,20 +10,36 @@ function Kalkulasi($type, $data)
   switch ($type) {
     case 'OTHER-FORM':
       $sql = "SELECT
-          CONCAT(id_jeniscuti,'. ',nama_jeniscuti) nama_jeniscuti,
+          id_jeniscuti,
+          CONCAT(id_jeniscuti,'. ',nama_jeniscuti) nama_jeniscuti
+        FROM jenis_cuti
+            WHERE id_jeniscuti<>'1'";
+      $result = mysqli_query($conn, $sql);
+      $arrRes = [];
+      if (mysqli_num_rows($result) > 0)
+        foreach ($result as $row) {
+          $row['jml_hari'] = 0;
+          $arrRes[$row['id_jeniscuti']] = $row;
+        }
+      $sql = "SELECT
+          id_jeniscuti,
           SUM(COALESCE(lama_cuti,0)) jml_hari
         FROM jenis_cuti jc 
           LEFT JOIN pengajuan_cuti pc USING (id_jeniscuti) 
             WHERE id_jeniscuti<>'1'
-              AND (id_pegawai='$data[id_pegawai]' OR id_pegawai IS NULL) 
-              AND (tanggal_modifikasi<'$data[tanggal_modifikasi]' OR tanggal_modifikasi IS NULL)
-              AND (status_pengajuan='Disetujui' OR status_pengajuan IS NULL) GROUP BY id_jeniscuti";
+              AND (id_pegawai='$data[id_pegawai]') 
+              AND (tanggal_modifikasi<'$data[tanggal_modifikasi]')
+              AND (status_pengajuan='Disetujui') GROUP BY id_jeniscuti";
       $result = mysqli_query($conn, $sql);
-      $data = [];
       if (mysqli_num_rows($result) > 0)
-        while ($row = mysqli_fetch_assoc($result)) {
-          array_push($data, $row);
+        foreach ($result as $row) {
+          $arrRes[$row['id_jeniscuti']]['jml_hari'] += (int) $row['jml_hari'];
         }
+      $data = [];
+      foreach ($arrRes as $value) {
+        unset($value['id_jeniscuti']);
+        $data[] = $value;
+      }
       return $data;
       break;
 

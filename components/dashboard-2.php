@@ -155,7 +155,7 @@ $lain = Kalkulasi('OTHER-FORM', [
                   <?php } else { ?>
                     <?php unset($tahunan[$i]['ket']); ?>
                     <?php foreach ($tahunan[$i] as $key => $val) { ?>
-                      <td class="px-only-3"><?= $val === "Keterangan" ? "Jumlah Cuti" : $val ?><?= in_array($key, ['sisa', 'jml'])  ? " hari" : "" ?></td>
+                      <td class="px-only-3"><?= $val === "Keterangan" ? "Jumlah Cuti" : $val ?><?= in_array(strval($key), ['sisa', 'jml'])  ? " hari" : "" ?></td>
                     <?php } ?>
                   <?php } ?>
                   <?php foreach ($lain[$i] as $key => $val) { ?>

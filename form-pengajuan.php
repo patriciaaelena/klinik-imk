@@ -375,7 +375,7 @@ $lain = Kalkulasi('OTHER-FORM', [
         </tr>
         <tr>
           <td class="px-only-3">N- 1</td>
-          <td class="px-only-3">= Sisa cuti I tahun sebelumnya</td>
+          <td class="px-only-3">= Sisa cuti 1 tahun sebelumnya</td>
         </tr>
         <tr>
           <td class="px-only-3">N- 2</td>
