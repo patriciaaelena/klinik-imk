@@ -11,11 +11,11 @@ if ($pengajuan === NULL) {
 }
 $tahunan = Kalkulasi('TAHUNAN-FORM', [
   'id_pegawai' => $user['id_pegawai'],
-  'tanggal_modifikasi' => date("Y-m-d"),
+  'tanggal_modifikasi' => date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")),
 ]);
 $lain = Kalkulasi('OTHER-FORM', [
   'id_pegawai' => $user['id_pegawai'],
-  'tanggal_modifikasi' => date("Y-m-d"),
+  'tanggal_modifikasi' => date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")),
 ]);
 ?>
 <div class="container-fluid">

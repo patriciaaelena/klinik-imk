@@ -127,11 +127,8 @@ $rows = Pegawai('', count($cond) === 0 ? [] : $cond);
             <div class="modal-body">
               <div class="row px-3">
                 <div class="col-6 pb-2">
-                  <label for="nik1" class="form-label">NIK <span class="text-danger">*</span></label>
-                  <input type="number" class="form-control" id="nik1" name="nik" <?= $add['nik'] ?? '' ?> required>
-                  <div class="invalid-feedback">
-                    Harus diisi
-                  </div>
+                  <label for="nik1" class="form-label">NIK</label>
+                  <input type="number" class="form-control" id="nik1" name="nik" <?= $add['nik'] ?? '' ?>>
                 </div>
                 <div class="col-6 pb-3">
                   <label for="nip1" class="form-label">NIP</label>

@@ -18,6 +18,15 @@ function Pegawai($type, $data)
         ];
         return;
       }
+      if ($data['status'] === "TEKON" && empty($data['nik'])) {
+        $_SESSION['flash'] = [
+          'status' => 'error',
+          'msg' => 'Tenaga Kontrak harus memiliki NIK!',
+          'type' => 'ADD',
+          'data' => $data,
+        ];
+        return;
+      }
       if ($data['status'] === "TEKON" && !empty($data['nip'])) {
         $_SESSION['flash'] = [
           'status' => 'error',
